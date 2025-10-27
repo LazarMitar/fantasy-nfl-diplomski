@@ -33,6 +33,7 @@ public class AuthService {
         user.setLastname(request.getLastname());
         user.setUsername(request.getUsername());
         user.setCountry(request.getCountry());
+        user.setFavouriteTeam(request.getFavouriteTeam());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 

@@ -8,14 +8,16 @@ public class RegisterRequest {
     private String email;
     private String password;
     private String role;
+    private String favouriteTeam;
 
     public RegisterRequest() {}
 
-    public RegisterRequest(String name, String lastName, String username, String country, String email, String password, String role) {
+    public RegisterRequest(String name, String lastName, String username, String country, String favouriteTeam, String email, String password, String role) {
         this.name = name;
         this.lastname = lastName;
         this.username = username;
         this.country = country;
+        this.favouriteTeam = favouriteTeam;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -75,5 +77,13 @@ public class RegisterRequest {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getFavouriteTeam() {
+        return favouriteTeam;
+    }
+
+    public void setFavouriteTeam(String favouriteTeam) {
+        this.favouriteTeam = favouriteTeam;
     }
 }

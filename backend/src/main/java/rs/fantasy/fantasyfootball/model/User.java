@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String country;
 
+    @Column
+    private String favouriteTeam;
+
     @Column(nullable = false, unique = true)
     private String username;
 
@@ -53,11 +56,12 @@ public class User implements UserDetails {
     // Konstruktori
     public User() {}
 
-    public User(String name, String lastname, String username, String country, String email, String password, UserRole role) {
+    public User(String name, String lastname, String username, String country, String favouriteTeam, String email, String password, UserRole role) {
         this.name = name;
         this.lastname = lastname;
         this.username = username;
         this.country = country;
+        this.favouriteTeam = favouriteTeam;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -174,6 +178,14 @@ public class User implements UserDetails {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getFavouriteTeam() {
+        return favouriteTeam;
+    }
+
+    public void setFavouriteTeam(String favouriteTeam) {
+        this.favouriteTeam = favouriteTeam;
     }
 
     @Override
