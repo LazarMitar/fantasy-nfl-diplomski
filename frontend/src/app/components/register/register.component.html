@@ -24,6 +24,35 @@
         <input type="text" [(ngModel)]="country" name="country" required>
       </div>
       <div class="form-group">
+        <label>Omiljeni tim</label>
+        <div class="picker-display" (click)="openTeamModal()">
+          <ng-container *ngIf="selectedTeamLogo; else noTeam">
+            <img [src]="selectedTeamLogo" alt="Izabrani tim" />
+          </ng-container>
+          <ng-template #noTeam>
+            <span>Izaberi tim</span>
+          </ng-template>
+        </div>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal-backdrop" *ngIf="showTeamModal" (click)="closeTeamModal()"></div>
+      <div class="team-modal" *ngIf="showTeamModal">
+        <h3>Izaberi tim</h3>
+        <div class="teams-grid">
+          <div
+            *ngFor="let team of teams"
+            class="team-card"
+            (click)="selectTeam(team)"
+          >
+            <img [src]="team.logo" [alt]="team.name" />
+            <p>{{ team.name }}</p>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeTeamModal()">Zatvori</button>
+      </div>
+      
+      <div class="form-group">
         <label>Email</label>
         <input type="email" [(ngModel)]="email" name="email" required>
       </div>
