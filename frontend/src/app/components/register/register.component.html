@@ -1,0 +1,49 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="header">
+      <h1>NFL Fantasy League</h1>
+      <p>Kreiraj nalog</p>
+    </div>
+    <form (ngSubmit)="register()" class="register-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Ime</label>
+          <input type="text" [(ngModel)]="name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Prezime</label>
+          <input type="text" [(ngModel)]="lastname" name="lastname" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" [(ngModel)]="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label>Drzava</label>
+        <input type="text" [(ngModel)]="country" name="country" required>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label>Lozinka</label>
+        <input type="password" [(ngModel)]="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label>Tip naloga</label>
+        <select [(ngModel)]="role" name="role">
+          <option value="REGISTRATED_USER">Korisnik</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+      </div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <button type="submit" class="btn-primary">Registruj se</button>
+    </form>
+    <div class="footer">
+      <p>Vec imate nalog? <a routerLink="/login">Prijavite se</a></p>
+    </div>
+  </div>
+</div>
