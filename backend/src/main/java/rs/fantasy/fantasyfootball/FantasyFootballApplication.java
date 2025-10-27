@@ -10,4 +10,3 @@ public class FantasyFootballApplication {
         SpringApplication.run(FantasyFootballApplication.class, args);
     }
 }
-
