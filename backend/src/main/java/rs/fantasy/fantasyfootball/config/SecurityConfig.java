@@ -1,6 +1,7 @@
 package rs.fantasy.fantasyfootball.config;
 
 import rs.fantasy.fantasyfootball.repository.UserRepository;
+import rs.fantasy.fantasyfootball.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,10 +27,11 @@ public class SecurityConfig {
     private UserRepository userRepository;
 
     @Autowired
-    private JwtAuthenticationFilter jwtAuthFilter;
+    private JwtService jwtService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        JwtAuthenticationFilter jwtAuthFilter = new JwtAuthenticationFilter(jwtService, userDetailsService());
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth

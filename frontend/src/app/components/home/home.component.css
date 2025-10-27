@@ -1,0 +1,41 @@
+.home-container { 
+  min-height: 100vh; 
+  background-image: url('/assets/background2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white; 
+  padding: 40px; 
+}
+
+.header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 40px; 
+}
+
+.header h1 { 
+  font-size: 32px; 
+}
+
+.logout-btn { 
+  background: white; 
+  color: #013368; 
+  border: none; 
+  padding: 10px 20px; 
+  border-radius: 8px; 
+  font-weight: bold; 
+  cursor: pointer; 
+}
+
+.logout-btn:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 4px 12px rgba(255,255,255,0.3); 
+}
+
+.content { 
+  text-align: center; 
+  font-size: 20px; 
+}
+

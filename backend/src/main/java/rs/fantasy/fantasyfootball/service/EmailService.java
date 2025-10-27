@@ -16,7 +16,7 @@ public class EmailService {
 
     @Async
     public void sendVerificationEmail(String toEmail, String token) {
-        String verificationUrl =  "http://localhost:4200/email/confirm_email?token=" + token;
+        String verificationUrl =  "http://localhost:4200/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
