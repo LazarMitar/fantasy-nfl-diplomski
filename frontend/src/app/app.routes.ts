@@ -27,5 +27,10 @@ export const routes: Routes = [
     path: 'players',
     loadComponent: () => import('./components/players/players.component').then(m => m.PlayersComponent),
     canActivate: [adminGuard]
+  },
+  {
+    path: 'players/:id',
+    loadComponent: () => import('./components/player-detail/player-detail.component').then(m => m.PlayerDetailComponent),
+    canActivate: [adminGuard]
   }
 ];

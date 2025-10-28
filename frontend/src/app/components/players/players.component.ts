@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
+import { InjuryService } from '../../services/injury.service';
 import { Player, Position } from '../../models/player.model';
+import { PlayerInjury } from '../../models/injury.model';
 
 @Component({
   selector: 'app-players',
@@ -15,6 +17,7 @@ import { Player, Position } from '../../models/player.model';
 export class PlayersComponent implements OnInit {
   allPlayers: Player[] = [];
   filteredPlayers: Player[] = [];
+  playerInjuriesMap: { [key: number]: PlayerInjury[] } = {};
   
   // Filter values
   searchTerm: string = '';
@@ -151,10 +154,32 @@ export class PlayersComponent implements OnInit {
     'WAS': '#773141'
   };
 
-  constructor(private playerService: PlayerService, private router: Router) {}
+  constructor(
+    private playerService: PlayerService, 
+    private injuryService: InjuryService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadPlayers();
+    this.loadAllInjuries();
+  }
+
+  loadAllInjuries() {
+    // Load all player injuries - we need to get all players first, then their injuries
+    this.playerService.getAllPlayers().subscribe({
+      next: (players) => {
+        players.forEach(player => {
+          this.injuryService.getPlayerInjuries(player.id).subscribe({
+            next: (injuries) => {
+              if (injuries && injuries.length > 0) {
+                this.playerInjuriesMap[player.id] = injuries;
+              }
+            }
+          });
+        });
+      }
+    });
   }
 
   loadPlayers() {
@@ -230,7 +255,31 @@ export class PlayersComponent implements OnInit {
   }
 
   getTeamLogo(team: string): string {
-    return this.teamLogos[team] || '/assets/teams/cardinals.png'; // Default logo if team not found
+    return this.teamLogos[team] || '/assets/teams/cardinals.png'; // Default logo consoleteam not found
+  }
+
+  isCurrentlyInjured(playerId: number): boolean {
+    const injuries = this.playerInjuriesMap[playerId];
+    if (!injuries || injuries.length === 0) {
+      return false;
+    }
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    return injuries.some(pi => {
+      const injuryDate = new Date(pi.injuryDate);
+      injuryDate.setHours(0, 0, 0, 0);
+      
+      const recoveryEndDate = new Date(injuryDate);
+      recoveryEndDate.setDate(recoveryEndDate.getDate() + (pi.estimatedRecoveryWeeks * 7));
+      
+      return today >= injuryDate && today <= recoveryEndDate;
+    });
+  }
+
+  navigateToPlayer(playerId: number) {
+    this.router.navigate(['/players', playerId]);
   }
 
   openAddPlayerModal() {

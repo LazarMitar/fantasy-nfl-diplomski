@@ -2,16 +2,16 @@
   <div class="register-card">
     <div class="header">
       <h1>NFL Fantasy League</h1>
-      <p>Kreiraj nalog</p>
+      <p>Create an account</p>
     </div>
     <form (ngSubmit)="register()" class="register-form">
       <div class="form-row">
         <div class="form-group">
-          <label>Ime</label>
+          <label>Name</label>
           <input type="text" [(ngModel)]="name" name="name" required>
         </div>
         <div class="form-group">
-          <label>Prezime</label>
+          <label>Last name</label>
           <input type="text" [(ngModel)]="lastname" name="lastname" required>
         </div>
       </div>
@@ -20,17 +20,17 @@
         <input type="text" [(ngModel)]="username" name="username" required>
       </div>
       <div class="form-group">
-        <label>Drzava</label>
+        <label>Country</label>
         <input type="text" [(ngModel)]="country" name="country" required>
       </div>
       <div class="form-group">
-        <label>Omiljeni tim</label>
+        <label>Favorite team</label>
         <div class="picker-display" (click)="openTeamModal()">
           <ng-container *ngIf="selectedTeamLogo; else noTeam">
-            <img [src]="selectedTeamLogo" alt="Izabrani tim" />
+            <img [src]="selectedTeamLogo" alt="Selected team" />
           </ng-container>
           <ng-template #noTeam>
-            <span>Izaberi tim</span>
+            <span>Select team</span>
           </ng-template>
         </div>
       </div>
@@ -38,7 +38,7 @@
       <!-- Modal -->
       <div class="modal-backdrop" *ngIf="showTeamModal" (click)="closeTeamModal()"></div>
       <div class="team-modal" *ngIf="showTeamModal">
-        <h3>Izaberi tim</h3>
+        <h3>Select team</h3>
         <div class="teams-grid">
           <div
             *ngFor="let team of teams"
@@ -49,7 +49,7 @@
             <p>{{ team.name }}</p>
           </div>
         </div>
-        <button class="close-btn" (click)="closeTeamModal()">Zatvori</button>
+        <button class="close-btn" (click)="closeTeamModal()">Close</button>
       </div>
       
       <div class="form-group">
@@ -57,22 +57,22 @@
         <input type="email" [(ngModel)]="email" name="email" required>
       </div>
       <div class="form-group">
-        <label>Lozinka</label>
+        <label>Password</label>
         <input type="password" [(ngModel)]="password" name="password" required>
       </div>
       <div class="form-group">
-        <label>Tip naloga</label>
+        <label>Account type</label>
         <select [(ngModel)]="role" name="role">
-          <option value="REGISTRATED_USER">Korisnik</option>
+          <option value="REGISTRATED_USER">User</option>
           <option value="ADMIN">Admin</option>
         </select>
       </div>
       <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
-      <button type="submit" class="btn-primary">Registruj se</button>
+      <button type="submit" class="btn-primary">Register</button>
     </form>
     <div class="footer">
-      <p>Vec imate nalog? <a routerLink="/login">Prijavite se</a></p>
+      <p>Already have an account? <a routerLink="/login">Login</a></p>
     </div>
   </div>
 </div>

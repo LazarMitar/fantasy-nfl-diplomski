@@ -1,0 +1,93 @@
+<div class="player-detail-container" *ngIf="player">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">← Back</button>
+    <h1>Player Details</h1>
+  </div>
+
+  <div class="player-info-card" [ngStyle]="{'background-color': getTeamColor(player.team)}">
+    <div class="player-header">
+      <div class="player-name-section">
+        <h2>
+          {{ player.firstName }} {{ player.lastName }}
+          <img *ngIf="isCurrentlyInjured()" src="/assets/injury.png" alt="Injured" class="injury-icon">
+        </h2>
+      </div>
+      <span class="badge">{{ player.position }}</span>
+    </div>
+    
+    <div class="player-details">
+      <div class="detail-row">
+        <span class="label">Team:</span>
+        <span class="value">
+          <img [src]="getTeamLogo(player.team)" [alt]="player.team" class="team-logo-small">
+          {{ player.team }}
+        </span>
+      </div>
+      <div class="detail-row" *ngIf="player.jerseyNumber">
+        <span class="label">Jersey Number:</span>
+        <span class="value">#{{ player.jerseyNumber }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Price:</span>
+        <span class="value">${{ player.price }}M</span>
+      </div>
+    </div>
+
+    <button class="add-injury-btn" (click)="openInjuryModal()">
+      Add Injury
+    </button>
+  </div>
+
+  <div class="injuries-section">
+    <h3>Injury History</h3>
+    <div class="injuries-list">
+      <div *ngIf="playerInjuries.length === 0" class="no-injuries">
+        No injuries recorded
+      </div>
+      <div *ngFor="let pi of playerInjuries" class="injury-item">
+        <div class="injury-info">
+          <strong>{{ pi.injury.injuryName }}</strong>
+          <span>{{ pi.estimatedRecoveryWeeks }} weeks recovery</span>
+        </div>
+        <div class="injury-date">{{ pi.injuryDate }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Injury Modal -->
+<div class="modal-backdrop" *ngIf="showInjuryModal" (click)="closeInjuryModal()"></div>
+<div class="modal" *ngIf="showInjuryModal">
+  <div class="modal-header">
+    <h3>Add Injury</h3>
+    <button class="close-btn" (click)="closeInjuryModal()">×</button>
+  </div>
+  
+  <form (ngSubmit)="submitInjury()" class="modal-form">
+    <div class="form-group">
+      <label>Injury Type</label>
+      <select [(ngModel)]="injuryForm.injuryId" name="injuryId">
+        <option [value]="0">Select injury...</option>
+        <option *ngFor="let injury of allInjuries" [value]="injury.id">
+          {{ injury.injuryName }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Estimated Recovery (weeks)</label>
+      <input type="number" [(ngModel)]="injuryForm.estimatedRecoveryWeeks" name="weeks" min="1">
+    </div>
+
+    <div class="form-group">
+      <label>Injury Date</label>
+      <input type="date" [(ngModel)]="injuryForm.injuryDate" name="date">
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" (click)="closeInjuryModal()">Cancel</button>
+      <button type="submit">Add Injury</button>
+    </div>
+  </form>
+</div>
+
