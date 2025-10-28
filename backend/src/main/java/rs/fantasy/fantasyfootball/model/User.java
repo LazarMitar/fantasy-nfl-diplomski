@@ -75,7 +75,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username; // Koristiš username za login (ili email ako hoćeš)
+        return email; // Use email as username for Spring Security
     }
 
     @Override
