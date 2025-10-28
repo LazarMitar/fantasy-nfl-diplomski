@@ -1,7 +1,9 @@
 package rs.fantasy.fantasyfootball.config;
 
+import rs.fantasy.fantasyfootball.model.Injury;
 import rs.fantasy.fantasyfootball.model.Player;
 import rs.fantasy.fantasyfootball.model.Position;
+import rs.fantasy.fantasyfootball.repository.InjuryRepository;
 import rs.fantasy.fantasyfootball.repository.PlayerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -12,14 +14,15 @@ import java.util.List;
 public class DataSeeder implements CommandLineRunner {
 
     private final PlayerRepository playerRepository;
+    private final InjuryRepository injuryRepository;
 
-    public DataSeeder(PlayerRepository playerRepository) {
+    public DataSeeder(PlayerRepository playerRepository, InjuryRepository injuryRepository) {
         this.playerRepository = playerRepository;
+        this.injuryRepository = injuryRepository;
     }
 
     @Override
     public void run(String... args) {
-        // Ako baza već ima igrače, ne radi ništa (da ne duplira)
         if (playerRepository.count() == 0) {
             List<Player> players = List.of(
                     // Quarterbacks - All 32 NFL Teams
@@ -268,10 +271,50 @@ public class DataSeeder implements CommandLineRunner {
                     new Player("Las Vegas", "Raiders", "LV", Position.DEF, null, 4.0),
                     new Player("New York", "Jets", "NYJ", Position.DEF, null, 4.0)
             );
-
             playerRepository.saveAll(players);
             System.out.println("✅ DataSeeder: Default NFL players successfully inserted!");
-        } else {
+        }
+        else {
+            System.out.println("ℹ️ DataSeeder: Players already exist, skipping seeding.");
+        }
+        if (injuryRepository.count() == 0)
+        {
+            List<Injury> injuries = List.of(
+                    new Injury("ACL Tear", "godinu dana"),
+                    new Injury("MCL Sprain", "4-8 nedelja"),
+                    new Injury("Meniscus Tear", "oko 2 meseca"),
+                    new Injury("Ankle Sprain", "2-4 nedelje"),
+                    new Injury("Hamstring Strain", "3-4 nedelje"),
+                    new Injury("Achilles Rupture", "7-8 meseci"),
+                    new Injury("Shoulder Dislocation", "5-7 nedelja"),
+                    new Injury("AC Joint Sprain", "3-5 nedelja"),
+                    new Injury("Biceps Tear", "3-4 meseca"),
+                    new Injury("Elbow Hyperextension", "1-3 nedelje"),
+                    new Injury("Concussion", "1-2 nedelje"),
+                    new Injury("Neck Strain", "1 nedelja"),
+                    new Injury("Rib Fracture", "2-4 nedelje"),
+                    new Injury("Pectoral Tear", "8-12 nedelja"),
+                    new Injury("Back Spasms", "1-2 nedelje"),
+                    new Injury("Core Muscle Injury", "6-8 nedelja"),
+                    new Injury("Groin Strain", "2-3 nedelje"),
+                    new Injury("Turf Toe", "3-5 nedelja"),
+                    new Injury("Hand Fracture", "4-6 nedelja"),
+                    new Injury("Finger Dislocation", "1-2 nedelje"),
+                    new Injury("Wrist Sprain", "2-3 nedelje"),
+                    new Injury("Shoulder Labrum Tear", "2-4 meseca"),
+                    new Injury("High Ankle Sprain", "5-6 nedelja"),
+                    new Injury("Hip Flexor Strain", "3-4 nedelje"),
+                    new Injury("Chest Contusion", "1-2 nedelje"),
+                    new Injury("Foot Fracture", "6-8 nedelja"),
+                    new Injury("Calf Strain", "2-3 nedelje"),
+                    new Injury("Quad Contusion", "1-2 nedelje"),
+                    new Injury("Oblique Strain", "2-4 nedelje"),
+                    new Injury("Knee Contusion", "1-2 nedelje")
+            );
+            injuryRepository.saveAll(injuries);
+            System.out.println("✅ DataSeeder: Default NFL injuries successfully inserted!");
+        }
+        else {
             System.out.println("ℹ️ DataSeeder: Players already exist, skipping seeding.");
         }
     }

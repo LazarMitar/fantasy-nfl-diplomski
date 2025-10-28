@@ -1,8 +1,10 @@
 package rs.fantasy.fantasyfootball.controller;
 
-import rs.fantasy.fantasyfootball.model.Player;
-import rs.fantasy.fantasyfootball.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
+import rs.fantasy.fantasyfootball.model.Player;
+import rs.fantasy.fantasyfootball.model.PlayerInjury;
+import rs.fantasy.fantasyfootball.service.PlayerService;
+import rs.fantasy.fantasyfootball.service.PlayerInjuryService;
 
 import java.util.List;
 
@@ -12,9 +14,11 @@ import java.util.List;
 public class PlayerController {
 
     private final PlayerService playerService;
+    private final PlayerInjuryService playerInjuryService;
 
-    public PlayerController(PlayerService playerService) {
+    public PlayerController(PlayerService playerService, PlayerInjuryService playerInjuryService) {
         this.playerService = playerService;
+        this.playerInjuryService = playerInjuryService;
     }
 
     @GetMapping
@@ -24,7 +28,8 @@ public class PlayerController {
 
     @GetMapping("/{id}")
     public Player getPlayer(@PathVariable Long id) {
-        return playerService.getPlayerById(id).orElseThrow(() -> new RuntimeException("Player not found"));
+        return playerService.getPlayerById(id)
+                .orElseThrow(() -> new RuntimeException("Player not found"));
     }
 
     @PostMapping
@@ -41,4 +46,14 @@ public class PlayerController {
     public void deletePlayer(@PathVariable Long id) {
         playerService.deletePlayer(id);
     }
+
+    // ✅ Dodela povrede igraču
+    @PostMapping("/{playerId}/injury/{injuryId}")
+    public PlayerInjury assignInjury(
+            @PathVariable Long playerId,
+            @PathVariable Long injuryId,
+            @RequestParam("weeks") Integer weeks) {
+        return playerInjuryService.assignInjuryToPlayer(playerId, injuryId, weeks);
+    }
+
 }
