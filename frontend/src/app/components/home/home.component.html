@@ -5,6 +5,8 @@
   </div>
   <div class="content">
     <p>Uspesno ste prijavljeni!</p>
+    <button *ngIf="isAdmin" class="nav-btn" (click)="goToPlayers()">View Players</button>
   </div>
 </div>
+
 

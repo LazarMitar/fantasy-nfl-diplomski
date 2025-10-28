@@ -10,11 +10,19 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  get isAdmin(): boolean {
+    return localStorage.getItem('role') === 'ADMIN';
+  }
+  
   constructor(private router: Router) {}
   
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     this.router.navigate(['/login']);
+  }
+
+  goToPlayers() {
+    this.router.navigate(['/players']);
   }
 }
