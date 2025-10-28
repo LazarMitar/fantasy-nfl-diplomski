@@ -25,7 +25,7 @@ export class PlayersComponent implements OnInit {
   // Options for filters
   positions = ['All', 'QB', 'RB', 'WR', 'TE', 'K', 'DEF'];
   teams: string[] = ['All'];
-  priceOptions = ['All', 'Low (<10)', 'Medium (10-20)', 'High (>20)'];
+  priceOptions = ['All', '4-7', '7-10', '10-12', '12+'];
   
   // Loading state
   isLoading = false;
@@ -195,12 +195,14 @@ export class PlayersComponent implements OnInit {
       
       // Filter by price
       let matchesPrice = true;
-      if (this.priceFilter === 'Low (<10)') {
-        matchesPrice = player.price < 10;
-      } else if (this.priceFilter === 'Medium (10-20)') {
-        matchesPrice = player.price >= 10 && player.price <= 20;
-      } else if (this.priceFilter === 'High (>20)') {
-        matchesPrice = player.price > 20;
+      if (this.priceFilter === '4-7') {
+        matchesPrice = player.price >= 4 && player.price < 7;
+      } else if (this.priceFilter === '7-10') {
+        matchesPrice = player.price >= 7 && player.price < 10;
+      } else if (this.priceFilter === '10-12') {
+        matchesPrice = player.price >= 10 && player.price < 12;
+      } else if (this.priceFilter === '12+') {
+        matchesPrice = player.price >= 12;
       }
       
       return matchesSearch && matchesPosition && matchesTeam && matchesPrice;
