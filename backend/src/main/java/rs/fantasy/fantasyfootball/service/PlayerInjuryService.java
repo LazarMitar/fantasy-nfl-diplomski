@@ -29,14 +29,19 @@ public class PlayerInjuryService {
         return playerInjuryRepository.findAll();
     }
 
+    public List<PlayerInjury> getPlayerInjuries(Long playerId) {
+        return playerInjuryRepository.findByPlayerId(playerId);
+    }
 
-    public PlayerInjury assignInjuryToPlayer(Long playerId, Long injuryId, Integer weeks) {
+
+    public PlayerInjury assignInjuryToPlayer(Long playerId, Long injuryId, Integer weeks, String injuryDate) {
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new RuntimeException("Igrač nije pronađen!"));
         Injury injury = injuryRepository.findById(injuryId)
                 .orElseThrow(() -> new RuntimeException("Povreda nije pronađena!"));
 
         PlayerInjury playerInjury = new PlayerInjury(player, injury, weeks);
+        playerInjury.setInjuryDate(injuryDate);
         return playerInjuryRepository.save(playerInjury);
     }
 

@@ -1,6 +1,7 @@
 package rs.fantasy.fantasyfootball.controller;
 
 import org.springframework.web.bind.annotation.*;
+import rs.fantasy.fantasyfootball.dto.AssignInjuryRequest;
 import rs.fantasy.fantasyfootball.model.Player;
 import rs.fantasy.fantasyfootball.model.PlayerInjury;
 import rs.fantasy.fantasyfootball.service.PlayerService;
@@ -48,12 +49,22 @@ public class PlayerController {
     }
 
     // ✅ Dodela povrede igraču
-    @PostMapping("/{playerId}/injury/{injuryId}")
+    @PostMapping("/{playerId}/injuries")
     public PlayerInjury assignInjury(
             @PathVariable Long playerId,
-            @PathVariable Long injuryId,
-            @RequestParam("weeks") Integer weeks) {
-        return playerInjuryService.assignInjuryToPlayer(playerId, injuryId, weeks);
+            @RequestBody AssignInjuryRequest request) {
+        return playerInjuryService.assignInjuryToPlayer(
+                playerId,
+                request.getInjuryId(),
+                request.getEstimatedRecoveryWeeks(),
+                request.getInjuryDate()
+        );
+    }
+
+    // ✅ LIst povreda igrača
+    @GetMapping("/{playerId}/injuries")
+    public List<PlayerInjury> getPlayerInjuries(@PathVariable Long playerId) {
+        return playerInjuryService.getPlayerInjuries(playerId);
     }
 
 }

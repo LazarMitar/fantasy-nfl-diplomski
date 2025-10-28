@@ -163,12 +163,15 @@
         <p>No players found matching your filters.</p>
       </div>
 
-      <div *ngFor="let player of filteredPlayers" class="player-card" [ngStyle]="{'background-color': getTeamColor(player.team)}">
+      <div *ngFor="let player of filteredPlayers" class="player-card" [ngStyle]="{'background-color': getTeamColor(player.team)}" (click)="navigateToPlayer(player.id)" style="cursor: pointer;">
         <img class="team-logo" [src]="getTeamLogo(player.team)" [alt]="player.team">
         <div class="player-info">
           <div class="player-name-section">
             <h3>{{ player.firstName }} {{ player.lastName }}</h3>
-            <p class="player-details">{{ player.team }} - {{ player.position }}</p>
+            <p class="player-details">
+              {{ player.team }} - {{ player.position }}
+              <img *ngIf="isCurrentlyInjured(player.id)" src="/assets/injury.png" alt="Injured" class="injury-icon-small">
+            </p>
           </div>
         </div>
         
