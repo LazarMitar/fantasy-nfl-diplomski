@@ -67,6 +67,88 @@
     <div class="player-count">
       <span>{{ filteredPlayers.length }} players shown</span>
     </div>
+    
+    <!-- Add Player Button -->
+    <div class="add-player-section">
+      <button class="add-player-btn" (click)="openAddPlayerModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Add Player
+      </button>
+    </div>
+  </div>
+  
+  <!-- Add Player Modal -->
+  <div class="modal-backdrop" *ngIf="showAddPlayerModal" (click)="closeAddPlayerModal()"></div>
+  <div class="add-player-modal" *ngIf="showAddPlayerModal">
+    <h3>Add New Player</h3>
+    <form (ngSubmit)="addPlayer()" class="add-player-form">
+      <div class="form-group">
+        <label>First Name</label>
+        <input type="text" [(ngModel)]="newPlayer.firstName" name="firstName" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Last Name</label>
+        <input type="text" [(ngModel)]="newPlayer.lastName" name="lastName" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Team</label>
+        <div class="picker-display" (click)="openTeamPicker()">
+          <ng-container *ngIf="selectedTeamLogo; else noTeam">
+            <img [src]="selectedTeamLogo" alt="Selected team" />
+          </ng-container>
+          <ng-template #noTeam>
+            <span>Select Team</span>
+          </ng-template>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Position</label>
+        <select [(ngModel)]="newPlayer.position" name="position" required>
+          <option value="QB">QB</option>
+          <option value="RB">RB</option>
+          <option value="WR">WR</option>
+          <option value="TE">TE</option>
+          <option value="K">K</option>
+          <option value="DEF">DEF</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label>Jersey Number (Optional)</label>
+        <input type="number" [(ngModel)]="newPlayer.jerseyNumber" name="jerseyNumber" min="0" max="99">
+      </div>
+      
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" [(ngModel)]="newPlayer.price" name="price" step="0.5" required>
+      </div>
+      
+      <div class="modal-buttons">
+        <button type="button" class="btn-cancel" (click)="closeAddPlayerModal()">Cancel</button>
+        <button type="submit" class="btn-submit">Add Player</button>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Team Picker Modal - OUTSIDE Add Player Modal -->
+  <div class="modal-backdrop" *ngIf="showTeamPicker" (click)="closeTeamPicker()"></div>
+  <div class="team-modal" *ngIf="showTeamPicker">
+    <h3>Select Team</h3>
+    <div class="teams-grid">
+      <div
+        *ngFor="let team of availableTeams"
+        class="team-card"
+        (click)="selectTeam(team)"
+      >
+        <img [src]="team.logo" [alt]="team.name" />
+      </div>
+    </div>
+    <button class="close-btn" (click)="closeTeamPicker()">Close</button>
   </div>
 
   <!-- Loading State -->

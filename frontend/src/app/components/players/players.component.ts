@@ -29,6 +29,55 @@ export class PlayersComponent implements OnInit {
   
   // Loading state
   isLoading = false;
+  
+  // Modal state
+  showAddPlayerModal = false;
+  showTeamPicker = false;
+  selectedTeamLogo = '';
+  newPlayer = {
+    firstName: '',
+    lastName: '',
+    team: '',
+    position: 'QB' as Position,
+    jerseyNumber: undefined as number | undefined,
+    price: 0
+  };
+  
+  // Available teams for picker
+  availableTeams = [
+    { id: 'ARI', name: 'Arizona Cardinals', logo: '/assets/teams/cardinals.png' },
+    { id: 'ATL', name: 'Atlanta Falcons', logo: '/assets/teams/falcons.png' },
+    { id: 'BAL', name: 'Baltimore Ravens', logo: '/assets/teams/ravens.png' },
+    { id: 'BUF', name: 'Buffalo Bills', logo: '/assets/teams/bills.png' },
+    { id: 'CAR', name: 'Carolina Panthers', logo: '/assets/teams/panthers.png' },
+    { id: 'CHI', name: 'Chicago Bears', logo: '/assets/teams/bears.png' },
+    { id: 'CIN', name: 'Cincinnati Bengals', logo: '/assets/teams/bengals.png' },
+    { id: 'CLE', name: 'Cleveland Browns', logo: '/assets/teams/browns.png' },
+    { id: 'DAL', name: 'Dallas Cowboys', logo: '/assets/teams/cowboys.png' },
+    { id: 'DEN', name: 'Denver Broncos', logo: '/assets/teams/broncos.png' },
+    { id: 'DET', name: 'Detroit Lions', logo: '/assets/teams/lions.png' },
+    { id: 'GB',  name: 'Green Bay Packers', logo: '/assets/teams/packers.png' },
+    { id: 'HOU', name: 'Houston Texans', logo: '/assets/teams/texans.png' },
+    { id: 'IND', name: 'Indianapolis Colts', logo: '/assets/teams/colts.png' },
+    { id: 'JAX', name: 'Jacksonville Jaguars', logo: '/assets/teams/jaguars.png' },
+    { id: 'KC',  name: 'Kansas City Chiefs', logo: '/assets/teams/chief.png' },
+    { id: 'LV',  name: 'Las Vegas Raiders', logo: '/assets/teams/raiders.png' },
+    { id: 'LAC', name: 'Los Angeles Chargers', logo: '/assets/teams/chargers.png' },
+    { id: 'LAR', name: 'Los Angeles Rams', logo: '/assets/teams/rams.png' },
+    { id: 'MIA', name: 'Miami Dolphins', logo: '/assets/teams/dolphins.png' },
+    { id: 'MIN', name: 'Minnesota Vikings', logo: '/assets/teams/vikings.png' },
+    { id: 'NE',  name: 'New England Patriots', logo: '/assets/teams/patriots.png' },
+    { id: 'NO',  name: 'New Orleans Saints', logo: '/assets/teams/saints.png' },
+    { id: 'NYG', name: 'New York Giants', logo: '/assets/teams/giants.png' },
+    { id: 'NYJ', name: 'New York Jets', logo: '/assets/teams/jets.png' },
+    { id: 'PHI', name: 'Philadelphia Eagles', logo: '/assets/teams/eagles.png' },
+    { id: 'PIT', name: 'Pittsburgh Steelers', logo: '/assets/teams/steelers.png' },
+    { id: 'SF',  name: 'San Francisco 49ers', logo: '/assets/teams/49ers.png' },
+    { id: 'SEA', name: 'Seattle Seahawks', logo: '/assets/teams/seahawks.png' },
+    { id: 'TB',  name: 'Tampa Bay Buccaneers', logo: '/assets/teams/buccaneers.png' },
+    { id: 'TEN', name: 'Tennessee Titans', logo: '/assets/teams/titans.png' },
+    { id: 'WAS', name: 'Washington Commanders', logo: '/assets/teams/commanders.png' }
+  ];
 
   // NFL Team Logos
   teamLogos: { [key: string]: string } = {
@@ -180,5 +229,58 @@ export class PlayersComponent implements OnInit {
 
   getTeamLogo(team: string): string {
     return this.teamLogos[team] || '/assets/teams/cardinals.png'; // Default logo if team not found
+  }
+
+  openAddPlayerModal() {
+    this.showAddPlayerModal = true;
+  }
+
+  closeAddPlayerModal() {
+    this.showAddPlayerModal = false;
+    this.selectedTeamLogo = '';
+    this.newPlayer = {
+      firstName: '',
+      lastName: '',
+      team: '',
+      position: 'QB' as Position,
+      jerseyNumber: undefined,
+      price: 0
+    };
+  }
+
+  openTeamPicker() {
+    this.showTeamPicker = true;
+  }
+
+  closeTeamPicker() {
+    this.showTeamPicker = false;
+  }
+
+  selectTeam(team: any) {
+    this.newPlayer.team = team.id;
+    this.selectedTeamLogo = team.logo;
+    this.closeTeamPicker();
+  }
+
+  addPlayer() {
+    const playerToAdd: any = {
+      firstName: this.newPlayer.firstName,
+      lastName: this.newPlayer.lastName,
+      team: this.newPlayer.team.toUpperCase(),
+      position: this.newPlayer.position,
+      jerseyNumber: this.newPlayer.jerseyNumber || undefined,
+      price: this.newPlayer.price
+    };
+    
+    this.playerService.addPlayer(playerToAdd).subscribe({
+      next: () => {
+        this.loadPlayers(); // Reload players list
+        this.closeAddPlayerModal();
+      },
+      error: (error) => {
+        console.error('Error adding player:', error);
+        alert('Error adding player. Please try again.');
+      }
+    });
   }
 }
