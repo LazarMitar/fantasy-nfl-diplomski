@@ -15,7 +15,7 @@
 
     <div *ngIf="!loading && leagues.length > 0" class="leagues-list">
       <div *ngFor="let league of leagues" class="league-card">
-        <div class="league-info">
+        <div class="league-info" (click)="viewLeagueDetails(league.id)" style="cursor: pointer;">
           <h3>{{ league.name }}</h3>
           <div class="league-details">
             <span class="detail-item">
@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="league-actions">
-          <button class="btn-delete" (click)="deleteLeague(league.id)">Delete</button>
+          <button class="btn-delete" (click)="deleteLeague(league.id, $event)">Delete</button>
         </div>
       </div>
     </div>

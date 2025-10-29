@@ -1,0 +1,53 @@
+<div class="league-details-container">
+  <div class="league-details-card">
+    <div class="header">
+      <h1>{{ league?.name || 'League Details' }}</h1>
+      <p *ngIf="league">Season: {{ league.season }} | Teams: {{ league.numberOfTeams }}</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="!loading && !errorMessage" class="standings-container">
+      <h2>Standings</h2>
+      
+      <div *ngIf="rosters.length === 0" class="no-rosters">
+        <p>No rosters in this league yet.</p>
+      </div>
+
+      <table *ngIf="rosters.length > 0" class="standings-table">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>W-L</th>
+            <th>Pct</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let roster of rosters; let i = index">
+            <td class="rank">{{ i + 1 }}</td>
+            <td class="team-cell">
+              <div class="team-info">
+                <img 
+                  [src]="getTeamLogo(roster.user?.favouriteTeam)" 
+                  [alt]="roster.user?.favouriteTeam || 'Team'" 
+                  class="team-logo"
+                />
+                <span class="team-name">{{ roster.name }}</span>
+              </div>
+            </td>
+            <td class="wl">{{ roster.wins || 0 }}-{{ roster.losses || 0 }}</td>
+            <td class="pct">{{ formatPercentage(calculatePercentage(roster.wins, roster.losses)) }}</td>
+            <td class="points">{{ roster.points || 0 | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" (click)="goBack()">Back</button>
+    </div>
+  </div>
+</div>
