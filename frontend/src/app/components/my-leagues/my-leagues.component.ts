@@ -49,8 +49,16 @@ export class MyLeaguesComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  deleteLeague(id: number | undefined) {
+  viewLeagueDetails(id: number | undefined) {
+    if (id) {
+      this.router.navigate(['/my-leagues', id]);
+    }
+  }
+
+  deleteLeague(id: number | undefined, event: Event) {
     if (!id) return;
+    
+    event.stopPropagation(); // Prevent card click event
     
     if (confirm('Are you sure you want to delete this league?')) {
       this.leagueService.deleteLeague(id).subscribe({

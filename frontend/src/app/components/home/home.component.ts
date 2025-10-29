@@ -33,4 +33,8 @@ export class HomeComponent {
   goToMyLeagues() {
     this.router.navigate(['/my-leagues']);
   }
+
+  goToAvailableLeagues() {
+    this.router.navigate(['/available-leagues']);
+  }
 }

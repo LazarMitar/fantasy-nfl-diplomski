@@ -5,6 +5,7 @@ export interface User {
   email: string;
   username: string;
   role: string;
+  favouriteTeam?: string;
 }
 
 export interface League {

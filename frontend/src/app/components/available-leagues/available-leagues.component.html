@@ -1,21 +1,20 @@
-<div class="my-leagues-container">
-  <div class="my-leagues-card">
+<div class="available-leagues-container">
+  <div class="available-leagues-card">
     <div class="header">
-      <h1>My Leagues</h1>
-      <p>Overview of all leagues you have created</p>
+      <h1>Available Leagues</h1>
+      <p>Browse and join available leagues</p>
     </div>
 
     <div *ngIf="loading" class="loading">Loading...</div>
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <div *ngIf="!loading && leagues.length === 0" class="no-leagues">
-      <p>You have no created leagues.</p>
-      <button class="btn-primary" (click)="goToCreateLeague()">Create First League</button>
+      <p>No available leagues at the moment.</p>
     </div>
 
     <div *ngIf="!loading && leagues.length > 0" class="leagues-list">
       <div *ngFor="let league of leagues" class="league-card">
-        <div class="league-info" (click)="viewLeagueDetails(league.id)" style="cursor: pointer;">
+        <div class="league-info">
           <h3>{{ league.name }}</h3>
           <div class="league-details">
             <span class="detail-item">
@@ -24,20 +23,26 @@
             <span class="detail-item">
               <strong>Number of Teams:</strong> {{ league.numberOfTeams }}
             </span>
-            <span class="detail-item" [class.available]="getAvailability(league)" [class.unavailable]="!getAvailability(league)">
-              <strong>Status:</strong> {{ getAvailability(league) ? 'Available' : 'Unavailable' }}
+            <span class="detail-item">
+              <strong>Created by:</strong> {{ league.createdBy?.name }} {{ league.createdBy?.lastname }}
             </span>
           </div>
         </div>
         <div class="league-actions">
-          <button class="btn-delete" (click)="deleteLeague(league.id, $event)">Delete</button>
+          <button class="btn-join" (click)="openJoinForm(league)">Join</button>
         </div>
       </div>
     </div>
 
+    <app-join-league 
+      *ngIf="showJoinForm && selectedLeague"
+      [league]="selectedLeague"
+      (close)="closeJoinForm()"
+      (success)="onJoinSuccess()">
+    </app-join-league>
+
     <div class="actions">
       <button class="btn-secondary" (click)="goBack()">Back</button>
-      <button class="btn-primary" (click)="goToCreateLeague()">Create New League</button>
     </div>
   </div>
 </div>

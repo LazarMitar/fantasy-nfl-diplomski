@@ -10,6 +10,9 @@
       <button class="nav-btn" (click)="goToCreateLeague()">Create League</button>
       <button class="nav-btn" (click)="goToMyLeagues()">My Leagues</button>
     </div>
+    <div *ngIf="!isAdmin" class="user-actions">
+      <button class="nav-btn" (click)="goToAvailableLeagues()">Available Leagues</button>
+    </div>
   </div>
 </div>
 
