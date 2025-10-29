@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { adminGuard } from './guards/auth.guard';
+import { adminGuard, authGuard } from './guards/auth.guard';
+import { userGuard } from './guards/user.guard';
 
 export const routes: Routes = [
   {
@@ -42,5 +43,10 @@ export const routes: Routes = [
     path: 'my-leagues',
     loadComponent: () => import('./components/my-leagues/my-leagues.component').then(m => m.MyLeaguesComponent),
     canActivate: [adminGuard]
+  },
+  {
+    path: 'available-leagues',
+    loadComponent: () => import('./components/available-leagues/available-leagues.component').then(m => m.AvailableLeaguesComponent),
+    canActivate: [userGuard]
   }
 ];

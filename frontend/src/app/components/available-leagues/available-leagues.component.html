@@ -1,0 +1,39 @@
+<div class="available-leagues-container">
+  <div class="available-leagues-card">
+    <div class="header">
+      <h1>Available Leagues</h1>
+      <p>Browse and join available leagues</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="!loading && leagues.length === 0" class="no-leagues">
+      <p>No available leagues at the moment.</p>
+    </div>
+
+    <div *ngIf="!loading && leagues.length > 0" class="leagues-list">
+      <div *ngFor="let league of leagues" class="league-card">
+        <div class="league-info">
+          <h3>{{ league.name }}</h3>
+          <div class="league-details">
+            <span class="detail-item">
+              <strong>Season:</strong> {{ league.season }}
+            </span>
+            <span class="detail-item">
+              <strong>Number of Teams:</strong> {{ league.numberOfTeams }}
+            </span>
+            <span class="detail-item">
+              <strong>Created by:</strong> {{ league.createdBy?.name }} {{ league.createdBy?.lastname }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" (click)="goBack()">Back</button>
+    </div>
+  </div>
+</div>
+
