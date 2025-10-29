@@ -25,4 +25,12 @@ export class HomeComponent {
   goToPlayers() {
     this.router.navigate(['/players']);
   }
+
+  goToCreateLeague() {
+    this.router.navigate(['/create-league']);
+  }
+
+  goToMyLeagues() {
+    this.router.navigate(['/my-leagues']);
+  }
 }

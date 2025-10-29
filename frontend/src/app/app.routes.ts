@@ -32,5 +32,15 @@ export const routes: Routes = [
     path: 'players/:id',
     loadComponent: () => import('./components/player-detail/player-detail.component').then(m => m.PlayerDetailComponent),
     canActivate: [adminGuard]
+  },
+  {
+    path: 'create-league',
+    loadComponent: () => import('./components/create-league/create-league.component').then(m => m.CreateLeagueComponent),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'my-leagues',
+    loadComponent: () => import('./components/my-leagues/my-leagues.component').then(m => m.MyLeaguesComponent),
+    canActivate: [adminGuard]
   }
 ];

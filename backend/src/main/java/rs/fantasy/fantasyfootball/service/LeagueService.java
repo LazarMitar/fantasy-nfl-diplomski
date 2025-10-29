@@ -2,7 +2,9 @@ package rs.fantasy.fantasyfootball.service;
 
 import org.springframework.stereotype.Service;
 import rs.fantasy.fantasyfootball.model.League;
+import rs.fantasy.fantasyfootball.model.User;
 import rs.fantasy.fantasyfootball.repository.LeagueRepository;
+import rs.fantasy.fantasyfootball.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,12 +13,19 @@ import java.util.Optional;
 public class LeagueService {
 
     private final LeagueRepository leagueRepository;
+    private final UserRepository userRepository;
 
-    public LeagueService(LeagueRepository leagueRepository) {
+    public LeagueService(LeagueRepository leagueRepository, UserRepository userRepository) {
         this.leagueRepository = leagueRepository;
+        this.userRepository = userRepository;
     }
 
     public League createLeague(League league) {
+        // Auto-generiši naziv lige ako nije prosleđen
+        if (league.getName() == null || league.getName().trim().isEmpty()) {
+            long totalLeagues = leagueRepository.count();
+            league.setName("NFL-League " + (totalLeagues + 1));
+        }
         return leagueRepository.save(league);
     }
 
@@ -34,7 +43,7 @@ public class LeagueService {
         existing.setName(updatedLeague.getName());
         existing.setSeason(updatedLeague.getSeason());
         existing.setNumberOfTeams(updatedLeague.getNumberOfTeams());
-        existing.setCreatedByUserId(updatedLeague.getCreatedByUserId());
+        existing.setCreatedBy(updatedLeague.getCreatedBy());
         existing.setAvailable(updatedLeague.getAvailable());
         return leagueRepository.save(existing);
     }
@@ -46,6 +55,8 @@ public class LeagueService {
 
     // ✅ Vrati sve lige jednog admina
     public List<League> getLeaguesByAdmin(Long adminId) {
-        return leagueRepository.findByCreatedByUserId(adminId);
+        User admin = userRepository.findById(adminId)
+                .orElseThrow(() -> new RuntimeException("Korisnik nije pronađen"));
+        return leagueRepository.findByCreatedBy(admin);
     }
 }
