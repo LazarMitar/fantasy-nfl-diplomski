@@ -21,19 +21,20 @@ public class League {
     @Column(nullable = false)
     private Integer numberOfTeams;
 
-    @Column(nullable = false)
-    private Long createdByUserId;
+    @ManyToOne
+    @JoinColumn(name = "created_by_user_id", referencedColumnName = "id_kor", nullable = false)
+    private User createdBy;
 
     @Column
     private Boolean isAvailable;
 
     public League() {}
 
-    public League(String name, String season, Integer numberOfTeams, Long createdByUserId) {
+    public League(String name, String season, Integer numberOfTeams, User createdBy) {
         this.name = name;
         this.season = season;
         this.numberOfTeams = numberOfTeams;
-        this.createdByUserId = createdByUserId;
+        this.createdBy = createdBy;
         this.isAvailable = true;
     }
 
@@ -70,12 +71,12 @@ public class League {
         this.numberOfTeams = numberOfTeams;
     }
 
-    public Long getCreatedByUserId() {
-        return createdByUserId;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCreatedByUserId(Long createdByUserId) {
-        this.createdByUserId = createdByUserId;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Boolean getAvailable() {

@@ -1,0 +1,131 @@
+.create-league-container { 
+  min-height: 100vh; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  background-image: url('/assets/background2.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px; 
+}
+
+.create-league-card { 
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.create-league-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(0, 123, 255, 0.4);
+}
+
+.header { 
+  text-align: center; 
+  margin-bottom: 30px; 
+}
+
+.header h1 { 
+  color: white; 
+  margin: 0 0 10px 0; 
+  font-size: 28px; 
+}
+
+.header p { 
+  color: white; 
+}
+
+.create-league-form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px; 
+}
+
+.form-group { 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.form-group label { 
+  color: white; 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+}
+
+.form-group input { 
+  padding: 12px; 
+  border: 2px solid #e0e0e0; 
+  border-radius: 8px; 
+}
+
+.form-group input:focus { 
+  outline: none; 
+  border-color: #013368; 
+}
+
+.error-message { 
+  background: #fee; 
+  color: #c33; 
+  padding: 12px; 
+  border-radius: 8px; 
+  text-align: center; 
+}
+
+.success-message { 
+  background: #efe; 
+  color: #3c3; 
+  padding: 12px; 
+  border-radius: 8px; 
+  text-align: center; 
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-primary { 
+  flex: 1;
+  background: linear-gradient(135deg, #013368, #1a5490); 
+  color: white; 
+  border: none; 
+  padding: 14px; 
+  border-radius: 8px; 
+  font-size: 16px; 
+  font-weight: bold; 
+  cursor: pointer; 
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 20px rgba(1,51,104,0.3); 
+}
+
+.btn-secondary {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+

@@ -5,7 +5,11 @@
   </div>
   <div class="content">
     <p>Uspesno ste prijavljeni!</p>
-    <button *ngIf="isAdmin" class="nav-btn" (click)="goToPlayers()">View Players</button>
+    <div *ngIf="isAdmin" class="admin-actions">
+      <button class="nav-btn" (click)="goToPlayers()">View Players</button>
+      <button class="nav-btn" (click)="goToCreateLeague()">Create League</button>
+      <button class="nav-btn" (click)="goToMyLeagues()">My Leagues</button>
+    </div>
   </div>
 </div>
 
