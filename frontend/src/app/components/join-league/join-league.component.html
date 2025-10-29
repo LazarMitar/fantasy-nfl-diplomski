@@ -1,0 +1,37 @@
+<div class="join-league-overlay" (click)="closeForm()">
+  <div class="join-league-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Join League</h2>
+      <button class="close-btn" (click)="closeForm()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <p class="league-info" *ngIf="league">
+        Joining: <strong>{{ league.name }}</strong>
+      </p>
+      
+      <div class="form-group">
+        <label>Roster Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="rosterName" 
+          name="rosterName"
+          placeholder="Enter your roster name"
+          class="form-control"
+          [disabled]="loading">
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeForm()" [disabled]="loading">Cancel</button>
+      <button class="btn-primary" (click)="joinLeague()" [disabled]="loading">
+        {{ loading ? 'Joining...' : 'Join League' }}
+      </button>
+    </div>
+  </div>
+</div>
+

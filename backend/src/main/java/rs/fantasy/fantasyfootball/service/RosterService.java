@@ -38,24 +38,31 @@ public class RosterService {
         return rosterRepository.findByLeague(league);
     }
 
+    public List<Roster> getRostersByUser(User user) {
+        return rosterRepository.findByUser(user);
+    }
+
     public Roster createRoster(Roster roster, Long leagueId, User user) {
         League league = leagueRepository.findById(leagueId)
                 .orElseThrow(() -> new RuntimeException("League not found"));
 
-        // Validacija: proveri da li liga postoji i da li je dostupna
         if (!league.getAvailable()) {
             throw new RuntimeException("League is not available");
         }
 
-        // Validacija: proveri da li korisnik već ima roster u ovoj ligi
         if (rosterRepository.existsByLeagueAndUser(league, user)) {
             throw new RuntimeException("User already has a roster in this league");
         }
 
-        // Validacija: proveri da li ima mesta u ligi
         List<Roster> existingRosters = rosterRepository.findByLeague(league);
         if (existingRosters.size() >= league.getNumberOfTeams()) {
             throw new RuntimeException("League is full. Maximum " + league.getNumberOfTeams() + " teams allowed.");
+        }
+
+        // Validacija: proveri da li korisnik već ima 5+ roster-a u ovoj sezoni
+        int rostersInSeason = rosterRepository.countByUserIdAndSeason(user.getId_kor());
+        if (rostersInSeason >= 5) {
+            throw new RuntimeException("Maximum 5 rosters allowed per season. You have " + rostersInSeason + " rosters in season " + league.getSeason());
         }
 
         roster.setLeague(league);

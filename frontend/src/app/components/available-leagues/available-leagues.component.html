@@ -28,8 +28,18 @@
             </span>
           </div>
         </div>
+        <div class="league-actions">
+          <button class="btn-join" (click)="openJoinForm(league)">Join</button>
+        </div>
       </div>
     </div>
+
+    <app-join-league 
+      *ngIf="showJoinForm && selectedLeague"
+      [league]="selectedLeague"
+      (close)="closeJoinForm()"
+      (success)="onJoinSuccess()">
+    </app-join-league>
 
     <div class="actions">
       <button class="btn-secondary" (click)="goBack()">Back</button>
