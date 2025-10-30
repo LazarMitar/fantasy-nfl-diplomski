@@ -3,6 +3,7 @@ package rs.fantasy.fantasyfootball.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import rs.fantasy.fantasyfootball.model.Player;
+import rs.fantasy.fantasyfootball.model.Position;
 import rs.fantasy.fantasyfootball.model.Roster;
 import rs.fantasy.fantasyfootball.model.RosterPlayer;
 import rs.fantasy.fantasyfootball.repository.PlayerRepository;
@@ -10,6 +11,7 @@ import rs.fantasy.fantasyfootball.repository.RosterPlayerRepository;
 import rs.fantasy.fantasyfootball.repository.RosterRepository;
 import rs.fantasy.fantasyfootball.service.RosterService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,8 +36,26 @@ public class RosterPlayerService {
         return rosterPlayerRepository.findByRosterId(rosterId);
     }
 
+    public List<Player> getAllAvailablePlayers(Long rosterId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster nije pronađen"));
+
+        Long leagueId = roster.getLeague().getId();
+        List<Long> occupiedPlayerIds = rosterPlayerRepository.findPlayerIdsByLeagueId(leagueId);
+
+        if (occupiedPlayerIds.isEmpty()) {
+            return playerRepository.findAll();
+        } else {
+            return playerRepository.findByIdNotIn(occupiedPlayerIds);
+        }
+    }
+
     @Transactional
     public RosterPlayer addPlayerToRoster(Long rosterId, Long playerId, boolean starter, boolean captain) {
+        if(rosterPlayerRepository.countPlayersByRosterId(rosterId) >= 13) {
+            throw new RuntimeException("Ne mozete imati preko 13 igraca u rosteru!");
+        }
+
         if (rosterPlayerRepository.existsByRosterIdAndPlayerId(rosterId, playerId)) {
             throw new RuntimeException("Igrac je vec u rosteru!");
         }
@@ -54,14 +74,65 @@ public class RosterPlayerService {
             throw new RuntimeException("Nemate dovoljno budžeta! Potrebno: " + player.getPrice() + ", a imate: " + roster.getBudget());
         }
 
+        if (starter) {
+            Position position = player.getPosition();
+            long currentStartersForPosition = rosterPlayerRepository.countStartersByRosterAndPosition(rosterId, position);
+
+            int allowed;
+            switch (position) {
+                case QB:
+                    allowed = 1; break;
+                case RB:
+                    allowed = 2; break;
+                case WR:
+                    allowed = 2; break;
+                case TE:
+                    allowed = 1; break;
+                case K:
+                    allowed = 1; break;
+                case DEF:
+                    allowed = 1; break;
+                default:
+                    allowed = 0; // should not happen
+            }
+
+            if (currentStartersForPosition >= allowed) {
+                throw new RuntimeException("Prevazidjen limit startera za poziciju: " + position.name());
+            }
+        }
+
         RosterPlayer rosterPlayer = new RosterPlayer(roster, player, starter, captain);
         rosterPlayerRepository.save(rosterPlayer);
 
         roster.setBudget(roster.getBudget() - player.getPrice());
         rosterService.saveRoster(roster);
 
+        // Ako je roster sada popunjen sa 13 igraca, proveri konacni starter sastav
+        List<RosterPlayer> allPlayersInRoster = rosterPlayerRepository.findByRosterId(rosterId);
+        if (allPlayersInRoster.size() == 13) {
+            long startersCount = allPlayersInRoster.stream().filter(RosterPlayer::isStarter).count();
+            long benchCount = allPlayersInRoster.size() - startersCount;
+
+            if (startersCount != 8 || benchCount != 5) {
+                throw new RuntimeException("Roster nije validan: potrebno je tacno 8 startera i 5 na klupi");
+            }
+
+            long qb = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.QB).count();
+            long rb = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.RB).count();
+            long wr = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.WR).count();
+            long te = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.TE).count();
+            long k = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.K).count();
+            long def = allPlayersInRoster.stream().filter(rp -> rp.isStarter() && rp.getPlayer().getPosition() == Position.DEF).count();
+
+            boolean compositionOk = qb == 1 && rb == 2 && wr == 2 && te == 1 && k == 1 && def == 1;
+            if (!compositionOk) {
+                throw new RuntimeException("Starter sastav nije validan: ocekuje se 1QB, 2RB, 2WR, 1TE, 1K, 1DEF");
+            }
+        }
+
         return rosterPlayer;
     }
+
 
     @Transactional
     public void removePlayerFromRoster(Long rosterId, Long playerId) {

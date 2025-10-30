@@ -48,7 +48,7 @@ export class RosterDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.rosterId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadRosterData();
-    this.loadAllPlayers();
+    this.loadAllAvailablePlayers(this.rosterId);
   }
 
   loadRosterData(): void {
@@ -78,18 +78,19 @@ export class RosterDetailsComponent implements OnInit {
     });
   }
 
-  loadAllPlayers(): void {
-    this.playerService.getAllPlayers().subscribe({
+  loadAllAvailablePlayers(rosterId: number): void {
+    this.playerService.getAllAvailablePlayers(rosterId!).subscribe({
       next: (players) => {
         this.allPlayers = players;
         this.extractTeams();
         this.applyFilters();
       },
       error: (error) => {
-        console.error('Error loading players:', error);
+        console.error('Error loading available players:', error);
       }
     });
   }
+  
 
   extractTeams(): void {
     const uniqueTeams = [...new Set(this.allPlayers.map(p => p.team))].sort();

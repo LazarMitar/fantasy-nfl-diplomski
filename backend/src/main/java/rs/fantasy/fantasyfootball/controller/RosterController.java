@@ -143,6 +143,7 @@ public class RosterController {
 
         rosterPlayerService.swapStarterWithBench(rosterId, starterId, benchId);
     }
+
 }
 
 @RestController
