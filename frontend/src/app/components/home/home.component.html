@@ -3,8 +3,36 @@
     <h1>Dobrodosli u NFL Fantasy League!</h1>
     <button class="logout-btn" (click)="logout()">Odjavi se</button>
   </div>
+  
   <div class="content">
     <p>Uspesno ste prijavljeni!</p>
+    
+    <!-- Moji Rosters -->
+    <div class="rosters-section">
+      <h2>Moji Timovi</h2>
+      
+      <div *ngIf="loading" class="loading">Učitavanje...</div>
+      <div *ngIf="error" class="error">{{ error }}</div>
+      
+      <div *ngIf="!loading && !error" class="rosters-grid">
+        <div *ngIf="rosters.length === 0" class="no-rosters">
+          Nemate kreiranih timova
+        </div>
+        
+        <div *ngFor="let roster of rosters" class="roster-card" (click)="goToRosterDetails(roster.id!)" style="cursor: pointer;">
+          <h3>{{ roster.name }}</h3>
+          <div class="roster-details">
+            <p><strong>Liga:</strong> {{ roster.league?.name }}</p>
+            <p><strong>Pobede:</strong> {{ roster.wins }}</p>
+            <p><strong>Porazi:</strong> {{ roster.losses }}</p>
+            <p><strong>Poeni:</strong> {{ roster.points }}</p>
+            <p><strong>Budžet:</strong> ${{ roster.budget?.toFixed(2) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
     <div *ngIf="isAdmin" class="admin-actions">
       <button class="nav-btn" (click)="goToPlayers()">View Players</button>
       <button class="nav-btn" (click)="goToCreateLeague()">Create League</button>

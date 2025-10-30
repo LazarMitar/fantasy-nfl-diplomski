@@ -82,4 +82,36 @@ public class RosterPlayerService {
         roster.setBudget(roster.getBudget() + player.getPrice());
         rosterService.saveRoster(roster);
     }
+
+    @Transactional
+    public void setCaptain(Long rosterId, Long playerId) {
+        List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
+
+        rosterPlayers.forEach(rp -> {
+            if (rp.isCaptain()) {
+                rp.setCaptain(false);
+                rosterPlayerRepository.save(rp);
+            }
+        });
+
+        RosterPlayer captain = rosterPlayers.stream()
+                .filter(rp -> rp.getPlayer().getId().equals(playerId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Igrac nije pronadjen u rosteru"));
+
+        captain.setCaptain(true);
+        rosterPlayerRepository.save(captain);
+    }
+
+    @Transactional
+    public void removeCaptain(Long rosterId) {
+        List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
+
+        rosterPlayers.forEach(rp -> {
+            if (rp.isCaptain()) {
+                rp.setCaptain(false);
+                rosterPlayerRepository.save(rp);
+            }
+        });
+    }
 }
