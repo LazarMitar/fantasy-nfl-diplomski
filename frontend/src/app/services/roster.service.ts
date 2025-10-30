@@ -53,5 +53,11 @@ export class RosterService {
   removeCaptain(rosterId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/rosters/${rosterId}/captain`);
   }
+
+  swapStarter(rosterId: number, starterId: number, benchId: number): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/rosters/${rosterId}/swap`, null, {
+      params: { starterId, benchId }
+    });
+  }
 }
 

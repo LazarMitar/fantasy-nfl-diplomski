@@ -122,6 +122,27 @@ public class RosterController {
 
         rosterPlayerService.removeCaptain(rosterId);
     }
+
+    @PutMapping("/{rosterId}/swap")
+    public void swapStarterWithBench(
+            @PathVariable Long rosterId,
+            @RequestParam("starterId") Long starterId,
+            @RequestParam("benchId") Long benchId
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Roster roster = rosterService.getRosterById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster not found"));
+
+        if (!roster.getUser().getId_kor().equals(currentUser.getId_kor())) {
+            throw new RuntimeException("Nemate pravo da menjate ovaj roster");
+        }
+
+        rosterPlayerService.swapStarterWithBench(rosterId, starterId, benchId);
+    }
 }
 
 @RestController

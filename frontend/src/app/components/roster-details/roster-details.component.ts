@@ -34,6 +34,10 @@ export class RosterDetailsComponent implements OnInit {
   isLoading = false;
   error: string | null = null;
 
+  // Selection for swap
+  selectedStarterId: number | null = null;
+  selectedBenchId: number | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -309,6 +313,58 @@ export class RosterDetailsComponent implements OnInit {
     }
     
     return emptySlots;
+  }
+
+  onStarterCardClick(playerId: number): void {
+    // Toggle selection
+    this.selectedStarterId = this.selectedStarterId === playerId ? null : playerId;
+    // Attempt swap if both selected
+    if (this.selectedStarterId && this.selectedBenchId) {
+      this.executeSwap();
+    }
+  }
+
+  toggleStarterSelection(playerId: number): void {
+    this.onStarterCardClick(playerId);
+  }
+
+  onBenchCardClick(playerId: number): void {
+    // Toggle selection
+    this.selectedBenchId = this.selectedBenchId === playerId ? null : playerId;
+    // Attempt swap if both selected
+    if (this.selectedStarterId && this.selectedBenchId) {
+      this.executeSwap();
+    }
+  }
+
+  toggleBenchSelection(playerId: number): void {
+    this.onBenchCardClick(playerId);
+  }
+
+  private executeSwap(): void {
+    const starterId = this.selectedStarterId!;
+    const benchId = this.selectedBenchId!;
+
+    // Validate same position client-side (optional; backend već proverava)
+    const starter = this.rosterPlayers.find(rp => rp.player.id === starterId);
+    const bench = this.rosterPlayers.find(rp => rp.player.id === benchId);
+    if (!starter || !bench) return;
+    if (starter.player.position !== bench.player.position) {
+      alert('Igraci moraju biti iste pozicije za zamenu');
+      return;
+    }
+
+    this.rosterService.swapStarter(this.rosterId, starterId, benchId).subscribe({
+      next: () => {
+        this.selectedStarterId = null;
+        this.selectedBenchId = null;
+        this.loadRosterData();
+      },
+      error: (err) => {
+        alert('Zamena nije uspela: ' + (err.error?.message || 'Nepoznata greška'));
+        console.error(err);
+      }
+    });
   }
 
   getCaptain(): RosterPlayer | null {

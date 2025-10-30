@@ -123,8 +123,10 @@
           <div class="field-row starters-row">
             <div *ngFor="let starter of getStarterPlayers()" 
                  class="player-card-field"
+                 [class.selected]="selectedStarterId === starter.player.id"
                  [ngStyle]="{'background-color': getTeamColor(starter.player.team)}">
-              <button class="remove-field-btn" (click)="removePlayerFromRoster(starter.player.id)">✕</button>
+              <button class="remove-field-btn" (click)="removePlayerFromRoster(starter.player.id); $event.stopPropagation()">✕</button>
+              <button class="swap-btn" (click)="toggleStarterSelection(starter.player.id); $event.stopPropagation()" title="Zameni sa klupom">⇄</button>
               <span class="player-price">${{ starter.player.price }}M</span>
               <img class="field-team-logo" [src]="getTeamLogo(starter.player.team)" [alt]="starter.player.team">
               <span class="player-name">{{ starter.player.firstName }} {{ starter.player.lastName }}</span>
@@ -148,8 +150,10 @@
             <div class="bench-row">
               <div *ngFor="let bench of getBenchPlayers()" 
                    class="player-card-field bench-card"
+                   [class.selected]="selectedBenchId === bench.player.id"
                    [ngStyle]="{'background-color': getTeamColor(bench.player.team)}">
-                <button class="remove-field-btn" (click)="removePlayerFromRoster(bench.player.id)">✕</button>
+                <button class="remove-field-btn" (click)="removePlayerFromRoster(bench.player.id); $event.stopPropagation()">✕</button>
+                <button class="swap-btn" (click)="toggleBenchSelection(bench.player.id); $event.stopPropagation()" title="Zameni sa starterom">⇄</button>
                 <span class="player-price">${{ bench.player.price }}M</span>
                 <img class="field-team-logo" [src]="getTeamLogo(bench.player.team)" [alt]="bench.player.team">
                 <span class="player-name">{{ bench.player.firstName }} {{ bench.player.lastName }}</span>
