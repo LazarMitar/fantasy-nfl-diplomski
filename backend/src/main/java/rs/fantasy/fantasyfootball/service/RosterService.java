@@ -29,7 +29,7 @@ public class RosterService {
     }
 
     public Optional<Roster> getRosterById(Long id) {
-        return rosterRepository.findById(id);
+        return Optional.ofNullable(rosterRepository.findByIdWithLeague(id));
     }
 
     public List<Roster> getRostersByLeague(Long leagueId) {

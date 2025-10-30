@@ -4,8 +4,11 @@ import org.springframework.web.bind.annotation.*;
 import rs.fantasy.fantasyfootball.dto.AssignInjuryRequest;
 import rs.fantasy.fantasyfootball.model.Player;
 import rs.fantasy.fantasyfootball.model.PlayerInjury;
+import rs.fantasy.fantasyfootball.model.Roster;
+import rs.fantasy.fantasyfootball.model.RosterPlayer;
 import rs.fantasy.fantasyfootball.service.PlayerService;
 import rs.fantasy.fantasyfootball.service.PlayerInjuryService;
+import rs.fantasy.fantasyfootball.service.RosterPlayerService;
 
 import java.util.List;
 
@@ -16,15 +19,22 @@ public class PlayerController {
 
     private final PlayerService playerService;
     private final PlayerInjuryService playerInjuryService;
+    private final RosterPlayerService rosterPlayerService;
 
-    public PlayerController(PlayerService playerService, PlayerInjuryService playerInjuryService) {
+    public PlayerController(PlayerService playerService, PlayerInjuryService playerInjuryService,  RosterPlayerService rosterPlayerService) {
         this.playerService = playerService;
         this.playerInjuryService = playerInjuryService;
+        this.rosterPlayerService = rosterPlayerService;
     }
 
     @GetMapping
     public List<Player> getAllPlayers() {
         return playerService.getAllPlayers();
+    }
+
+    @GetMapping("/available")
+    public List<Player> getAllAvailablePlayers(@RequestParam Long rosterId) {
+        return rosterPlayerService.getAllAvailablePlayers(rosterId);
     }
 
     @GetMapping("/{id}")

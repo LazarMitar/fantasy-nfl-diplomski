@@ -14,6 +14,9 @@ public interface RosterRepository extends JpaRepository<Roster, Long> {
     List<Roster> findByLeague(League league);
     List<Roster> findByUser(User user);
     
+    @Query("SELECT r FROM Roster r LEFT JOIN FETCH r.league WHERE r.id = :id")
+    Roster findByIdWithLeague(Long id);
+    
     @Query("SELECT r FROM Roster r WHERE r.league.id = :id_liga")
     List<Roster> findByLeagueId(Long id_liga);
     

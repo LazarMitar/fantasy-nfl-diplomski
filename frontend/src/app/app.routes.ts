@@ -53,5 +53,9 @@ export const routes: Routes = [
     path: 'available-leagues',
     loadComponent: () => import('./components/available-leagues/available-leagues.component').then(m => m.AvailableLeaguesComponent),
     canActivate: [userGuard]
+  },
+  {
+    path: 'roster/:id',
+    loadComponent: () => import('./components/roster-details/roster-details.component').then(m => m.RosterDetailsComponent)
   }
 ];
