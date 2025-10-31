@@ -39,6 +39,9 @@ public class TradeService {
         if(initiator.getPlayer().getPosition() != receiver.getPlayer().getPosition()) {
             throw new  RuntimeException("You must trade position for position");
         }
+        if(initiator.isCaptain() ||  receiver.isCaptain()) {
+            throw new  RuntimeException("You can't trade for/your captain");
+        }
 
         Trade trade = new Trade(initiator, receiver);
         return tradeRepository.save(trade);
@@ -55,6 +58,15 @@ public class TradeService {
         if (trade.getStatus() != TradeStatus.PENDING) {
             throw new RuntimeException("Trade already executed or cancelled");
         }
+        if(trade.getInitiatorRosterPlayer().getRoster().getBudget() + trade.getInitiatorRosterPlayer().getPlayer().getPrice() -
+                trade.getReceiverRosterPlayer().getPlayer().getPrice() < 0 || trade.getReceiverRosterPlayer().getRoster().getBudget() +
+                trade.getReceiverRosterPlayer().getPlayer().getPrice() - trade.getInitiatorRosterPlayer().getPlayer().getPrice() < 0) {
+            throw new RuntimeException("Insufficient funds to accept trade");
+        }
+        if(trade.getInitiatorRosterPlayer().isCaptain() ||  trade.getReceiverRosterPlayer().isCaptain()) {
+            throw new  RuntimeException("You can't trade for/your captain");
+        }
+
 
         RosterPlayer initiatorPlayer = trade.getInitiatorRosterPlayer();
         RosterPlayer receiverPlayer = trade.getReceiverRosterPlayer();

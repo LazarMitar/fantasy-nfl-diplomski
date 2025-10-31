@@ -4,8 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { RosterService } from '../../services/roster.service';
+import { TradeService } from '../../services/trade.service';
 import { Player, Position } from '../../models/player.model';
 import { Roster, RosterPlayer } from '../../models/roster.model';
+import { Trade } from '../../models/trade.model';
 
 @Component({
   selector: 'app-roster-details',
@@ -38,17 +40,22 @@ export class RosterDetailsComponent implements OnInit {
   selectedStarterId: number | null = null;
   selectedBenchId: number | null = null;
 
+  // Pending trades
+  pendingTrades: Trade[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private rosterService: RosterService,
-    private playerService: PlayerService
+    private playerService: PlayerService,
+    private tradeService: TradeService
   ) {}
 
   ngOnInit(): void {
     this.rosterId = Number(this.route.snapshot.paramMap.get('id'));
     this.loadRosterData();
     this.loadAllAvailablePlayers(this.rosterId);
+    this.loadPendingTrades();
   }
 
   loadRosterData(): void {
@@ -179,6 +186,10 @@ export class RosterDetailsComponent implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+
+  goToCreateTrade(): void {
+    this.router.navigate(['/roster', this.rosterId, 'create-trade']);
   }
 
   getTeamColor(team: string): string {
@@ -392,6 +403,77 @@ export class RosterDetailsComponent implements OnInit {
       },
       error: (err) => {
         alert('Greška pri uklanjanju kapiten a');
+        console.error(err);
+      }
+    });
+  }
+
+  loadPendingTrades(): void {
+    this.tradeService.getMyPendingTrades(this.rosterId).subscribe({
+      next: (trades) => {
+        this.pendingTrades = trades;
+      },
+      error: (err) => {
+        console.error('Greška pri učitavanju trejdova:', err);
+      }
+    });
+  }
+
+  isInitiator(trade: Trade): boolean {
+    return trade.initiatorRosterPlayer.roster?.id === this.rosterId;
+  }
+
+  isReceiver(trade: Trade): boolean {
+    return trade.receiverRosterPlayer.roster?.id === this.rosterId;
+  }
+
+  cancelTrade(tradeId: number): void {
+    if (!confirm('Da li ste sigurni da želite da otkazete ovaj trejd?')) {
+      return;
+    }
+
+    this.tradeService.cancelTrade(tradeId).subscribe({
+      next: () => {
+        this.loadPendingTrades();
+        this.loadRosterData();
+      },
+      error: (err) => {
+        alert('Greška pri otkazivanju trejda: ' + (err.error?.message || 'Nepoznata greška'));
+        console.error(err);
+      }
+    });
+  }
+
+  acceptTrade(tradeId: number): void {
+    if (!confirm('Da li ste sigurni da želite da prihvatite ovaj trejd?')) {
+      return;
+    }
+
+    this.tradeService.acceptTrade(tradeId).subscribe({
+      next: () => {
+        alert('Trejd je uspešno prihvaćen!');
+        this.loadPendingTrades();
+        this.loadRosterData();
+      },
+      error: (err) => {
+        alert('Greška pri prihvatanju trejda: ' + (err.error?.message || 'Nepoznata greška'));
+        console.error(err);
+      }
+    });
+  }
+
+  rejectTrade(tradeId: number): void {
+    if (!confirm('Da li ste sigurni da želite da odbijete ovaj trejd?')) {
+      return;
+    }
+
+    this.tradeService.rejectTrade(tradeId).subscribe({
+      next: () => {
+        this.loadPendingTrades();
+        this.loadRosterData();
+      },
+      error: (err) => {
+        alert('Greška pri odbijanju trejda: ' + (err.error?.message || 'Nepoznata greška'));
         console.error(err);
       }
     });

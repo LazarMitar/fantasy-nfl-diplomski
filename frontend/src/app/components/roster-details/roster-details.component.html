@@ -2,7 +2,10 @@
   <div class="header">
     <h1>{{ roster?.name || 'Roster' }}</h1>
     <p class="subtitle">{{ roster?.league?.name }}</p>
-    <button class="back-btn" (click)="goBack()">← Nazad</button>
+    <div class="header-buttons">
+      <button class="trade-btn" (click)="goToCreateTrade()">🔄 Create trade</button>
+      <button class="back-btn" (click)="goBack()">← Back</button>
+    </div>
   </div>
 
   <div class="content-wrapper">
@@ -11,29 +14,29 @@
       <div class="filters-section">
         <div class="filter-row">
           <div class="filter-item">
-            <label>Pretraži po imenu</label>
+            <label>Search by player name</label>
             <input type="text" class="search-input"
                    [(ngModel)]="searchTerm"
                    (input)="applyFilters()"
-                   placeholder="Pretraži igrača...">
+                   placeholder="Search player...">
           </div>
 
           <div class="filter-item">
-            <label>Pozicija</label>
+            <label>Position</label>
             <select class="select-input" [(ngModel)]="selectedPosition" (change)="applyFilters()">
               <option *ngFor="let pos of positions" [value]="pos">{{ pos }}</option>
             </select>
           </div>
 
           <div class="filter-item">
-            <label>Tim</label>
+            <label>Team</label>
             <select class="select-input" [(ngModel)]="selectedTeam" (change)="applyFilters()">
               <option *ngFor="let team of teams" [value]="team">{{ team }}</option>
             </select>
           </div>
 
           <div class="filter-item">
-            <label>Cena</label>
+            <label>Price</label>
             <select class="select-input" [(ngModel)]="priceFilter" (change)="applyFilters()">
               <option *ngFor="let price of priceOptions" [value]="price">{{ price }}</option>
             </select>
@@ -41,20 +44,20 @@
 
           <div class="filter-item">
             <button class="reset-btn" (click)="resetFilters()">
-              Resetuj
+              Reset
             </button>
           </div>
         </div>
 
         <div class="player-count">
-          <span>{{ filteredPlayers.length }} igrača prikazano</span>
+          <span>{{ filteredPlayers.length }} players available</span>
         </div>
       </div>
 
       <!-- Players List -->
       <div class="players-list-container">
         <div *ngIf="isLoading" class="loading">
-          <p>Učitavanje igrača...</p>
+          <p>Loading available players...</p>
         </div>
 
         <div *ngIf="!isLoading" class="players-list">
@@ -69,7 +72,7 @@
             
             <div class="player-stats">
               <div class="stat">
-                <span class="stat-label">Cena</span>
+                <span class="stat-label">Price</span>
                 <span class="stat-value">${{ player.price }}M</span>
               </div>
             </div>
@@ -89,29 +92,86 @@
           </div>
         </div>
       </div>
+
+      <!-- Pending Trades Section -->
+      <div class="pending-trades-section">
+        <h2>Pending trades</h2>
+        <div *ngIf="pendingTrades.length === 0" class="no-trades">
+          <p>No pending trades</p>
+        </div>
+        <div *ngIf="pendingTrades.length > 0" class="trades-list">
+          <div *ngFor="let trade of pendingTrades" class="trade-card">
+            <div class="trade-players-info">
+              <div class="trade-player" 
+                   [ngStyle]="{'background-color': getTeamColor(trade.initiatorRosterPlayer.player.team)}">
+                <img class="trade-team-logo" [src]="getTeamLogo(trade.initiatorRosterPlayer.player.team)" 
+                     [alt]="trade.initiatorRosterPlayer.player.team">
+                <div class="trade-player-details">
+                  <h4>{{ trade.initiatorRosterPlayer.player.firstName }} {{ trade.initiatorRosterPlayer.player.lastName }}</h4>
+                  <p>{{ trade.initiatorRosterPlayer.player.team }} - {{ trade.initiatorRosterPlayer.player.position }}</p>
+                  <p class="trade-player-price">${{ trade.initiatorRosterPlayer.player.price }}M</p>
+                  <p *ngIf="isInitiator(trade)" class="trade-role">My player</p>
+                </div>
+              </div>
+              
+              <div class="trade-arrow">↔</div>
+              
+              <div class="trade-player" 
+                   [ngStyle]="{'background-color': getTeamColor(trade.receiverRosterPlayer.player.team)}">
+                <img class="trade-team-logo" [src]="getTeamLogo(trade.receiverRosterPlayer.player.team)" 
+                     [alt]="trade.receiverRosterPlayer.player.team">
+                <div class="trade-player-details">
+                  <h4>{{ trade.receiverRosterPlayer.player.firstName }} {{ trade.receiverRosterPlayer.player.lastName }}</h4>
+                  <p>{{ trade.receiverRosterPlayer.player.team }} - {{ trade.receiverRosterPlayer.player.position }}</p>
+                  <p class="trade-player-price">${{ trade.receiverRosterPlayer.player.price }}M</p>
+                  <p *ngIf="isReceiver(trade)" class="trade-role">My player</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="trade-actions">
+              <button *ngIf="isInitiator(trade)" 
+                      class="trade-action-btn cancel-btn" 
+                      (click)="cancelTrade(trade.id!)">
+                Cancel
+              </button>
+              <button *ngIf="isReceiver(trade)" 
+                      class="trade-action-btn accept-btn" 
+                      (click)="acceptTrade(trade.id!)">
+                Accept
+              </button>
+              <button *ngIf="isReceiver(trade)" 
+                      class="trade-action-btn reject-btn" 
+                      (click)="rejectTrade(trade.id!)">
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Right Panel: Roster Display -->
     <div class="right-panel">
       <div class="roster-stats">
         <div class="stat-item">
-          <span class="stat-label">Budžet</span>
+          <span class="stat-label">Budget</span>
           <span class="stat-value">${{ roster?.budget?.toFixed(2) }}M</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Igrači</span>
+          <span class="stat-label">Players</span>
           <span class="stat-value">{{ rosterPlayers.length }}/13</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Pobede</span>
+          <span class="stat-label">Wins</span>
           <span class="stat-value">{{ roster?.wins || 0 }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Porazi</span>
+          <span class="stat-label">Losses</span>
           <span class="stat-value">{{ roster?.losses || 0 }}</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">Ukupan broj poena</span>
+          <span class="stat-label">Total points</span>
           <span class="stat-value">{{ roster?.points || 0 }}</span>
         </div>
       </div>
@@ -126,7 +186,7 @@
                  [class.selected]="selectedStarterId === starter.player.id"
                  [ngStyle]="{'background-color': getTeamColor(starter.player.team)}">
               <button class="remove-field-btn" (click)="removePlayerFromRoster(starter.player.id); $event.stopPropagation()">✕</button>
-              <button class="swap-btn" (click)="toggleStarterSelection(starter.player.id); $event.stopPropagation()" title="Zameni sa klupom">⇄</button>
+              <button class="swap-btn" (click)="toggleStarterSelection(starter.player.id); $event.stopPropagation()" title="Swap with bench">⇄</button>
               <span class="player-price">${{ starter.player.price }}M</span>
               <img class="field-team-logo" [src]="getTeamLogo(starter.player.team)" [alt]="starter.player.team">
               <span class="player-name">{{ starter.player.firstName }} {{ starter.player.lastName }}</span>
@@ -146,14 +206,14 @@
 
           <!-- Bench 5 Players -->
           <div class="bench-section">
-            <h3>Klupa ({{ getBenchPlayers().length }}/5)</h3>
+            <h3>Bench ({{ getBenchPlayers().length }}/5)</h3>
             <div class="bench-row">
               <div *ngFor="let bench of getBenchPlayers()" 
                    class="player-card-field bench-card"
                    [class.selected]="selectedBenchId === bench.player.id"
                    [ngStyle]="{'background-color': getTeamColor(bench.player.team)}">
                 <button class="remove-field-btn" (click)="removePlayerFromRoster(bench.player.id); $event.stopPropagation()">✕</button>
-                <button class="swap-btn" (click)="toggleBenchSelection(bench.player.id); $event.stopPropagation()" title="Zameni sa starterom">⇄</button>
+                <button class="swap-btn" (click)="toggleBenchSelection(bench.player.id); $event.stopPropagation()" title="Swap with starters">⇄</button>
                 <span class="player-price">${{ bench.player.price }}M</span>
                 <img class="field-team-logo" [src]="getTeamLogo(bench.player.team)" [alt]="bench.player.team">
                 <span class="player-name">{{ bench.player.firstName }} {{ bench.player.lastName }}</span>
@@ -172,7 +232,7 @@
 
           <!-- Captain Selection -->
           <div class="captain-section">
-            <h3>Kapiten tima</h3>
+            <h3>Captain</h3>
             <div class="captain-display">
               <div *ngIf="getCaptain(); else noCaptain" class="captain-card" 
                    [ngStyle]="{'background-color': getTeamColor(getCaptain()!.player.team)}">
@@ -184,13 +244,13 @@
               </div>
               <ng-template #noCaptain>
                 <div class="no-captain">
-                  <span>Kapiten nije izabran</span>
+                  <span>Please, choose your captain</span>
                 </div>
               </ng-template>
             </div>
             
             <div *ngIf="!getCaptain()" class="captain-options">
-              <p class="captain-label">Izaberite kapiten a od startera:</p>
+              <p class="captain-label">Choose captain from your starters:</p>
               <div class="starter-buttons">
                 <button *ngFor="let starter of getStarterPlayers()" 
                         class="starter-select-btn"
