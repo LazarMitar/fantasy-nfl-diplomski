@@ -15,6 +15,15 @@
   margin-bottom: 20px;
   color: white;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .header h1 {
@@ -43,6 +52,24 @@
 }
 
 .back-btn:hover {
+  background: white;
+  color: #013368;
+  transform: translateY(-2px);
+}
+
+.trade-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.trade-btn:hover {
   background: white;
   color: #013368;
   transform: translateY(-2px);
@@ -648,5 +675,229 @@
   .bench-row {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* Pending Trades Section */
+.pending-trades-section {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.pending-trades-section h2 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+}
+
+.no-trades {
+  text-align: center;
+  padding: 10px;
+  color: #666;
+  font-size: 12px;
+  border: 1px dashed #ddd;
+  border-radius: 6px;
+}
+
+.no-trades p {
+  margin: 0;
+}
+
+.trades-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.trade-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.trade-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.trade-players-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: nowrap;
+}
+
+.trade-player {
+  flex: 1;
+  min-width: 0;
+  max-width: 48%;
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.trade-team-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.trade-player-details {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.trade-player-details h4 {
+  margin: 0 0 2px 0;
+  color: white;
+  font-size: 12px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.trade-player-details p {
+  margin: 1px 0;
+  color: white;
+  font-size: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.trade-player-price {
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.trade-role {
+  margin-top: 3px;
+  font-weight: 600;
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.3);
+  padding: 1px 4px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.trade-arrow {
+  font-size: 16px;
+  font-weight: bold;
+  color: #013368;
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+
+.trade-actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.trade-action-btn {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  flex: 1;
+}
+
+.trade-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.cancel-btn {
+  background: #dc3545;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
+}
+
+.accept-btn {
+  background: #28a745;
+}
+
+.accept-btn:hover {
+  background: #218838;
+}
+
+.reject-btn {
+  background: #ffc107;
+  color: #333;
+}
+
+.reject-btn:hover {
+  background: #e0a800;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .trade-players-info {
+    flex-direction: column;
+  }
+  
+  .trade-arrow {
+    transform: rotate(90deg);
+  }
+  
+  .trade-actions {
+    flex-direction: column;
+  }
+  
+  .trade-action-btn {
+    width: 100%;
+  }
+}
+
+/* Scrollbar styling for trades list */
+.trades-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.trades-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.trades-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.trades-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 

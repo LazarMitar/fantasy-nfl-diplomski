@@ -57,5 +57,9 @@ export const routes: Routes = [
   {
     path: 'roster/:id',
     loadComponent: () => import('./components/roster-details/roster-details.component').then(m => m.RosterDetailsComponent)
+  },
+  {
+    path: 'roster/:rosterId/create-trade',
+    loadComponent: () => import('./components/create-trade/create-trade.component').then(m => m.CreateTradeComponent)
   }
 ];
