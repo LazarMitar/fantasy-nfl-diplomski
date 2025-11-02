@@ -1,0 +1,56 @@
+<div class="enter-stats-container">
+  <div class="header">
+    <button class="back-btn" (click)="goBack()">
+      ← Back to Home
+    </button>
+    <h1>📊 Enter Gameweek Statistics</h1>
+    <p class="subtitle">Select a team to enter player statistics</p>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Loading current gameweek...</p>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+  </div>
+
+  <div *ngIf="currentGameweek && !loading" class="gameweek-info">
+    <h2>Current Gameweek: Week {{ currentGameweek.weekNumber }}</h2>
+    <p class="status">
+      Status: <span class="badge in-progress">{{ currentGameweek.status }}</span>
+    </p>
+    <p class="season">Season: {{ currentGameweek.season }}</p>
+  </div>
+
+  <div *ngIf="currentGameweek && !loading" class="teams-grid">
+    <div 
+      *ngFor="let team of nflTeams" 
+      class="team-card"
+      [ngStyle]="{'background-color': getTeamColor(team.id)}"
+      (click)="selectTeam(team.id)">
+      <img class="team-logo" [src]="team.logo" [alt]="team.name">
+      <div class="team-info">
+        <h3>{{ team.name }}</h3>
+        <p class="team-code">{{ team.id }}</p>
+        <div class="progress-badge"
+             [class.complete]="getProgressPercentage(team.id) === 100"
+             [class.partial]="getProgressPercentage(team.id) > 0 && getProgressPercentage(team.id) < 100"
+             [class.none]="getProgressPercentage(team.id) === 0">
+          {{ getTeamProgress(team.id).entered }}/{{ getTeamProgress(team.id).total }}
+        </div>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </div>
+
+  <div *ngIf="currentGameweek && !loading" class="finish-section">
+    <button class="finish-btn" 
+            (click)="finishGameweek()">
+      ✅ Finish Gameweek {{ currentGameweek.weekNumber }}
+    </button>
+    <p *ngIf="!canFinishGameweek()" class="warning-text">
+      ⚠️ Please enter stats for every player
+    </p>
+  </div>
+</div>

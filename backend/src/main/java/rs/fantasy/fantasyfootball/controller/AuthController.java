@@ -5,6 +5,7 @@ import rs.fantasy.fantasyfootball.dto.LoginRequest;
 import rs.fantasy.fantasyfootball.dto.RegisterRequest;
 import rs.fantasy.fantasyfootball.model.User;
 import rs.fantasy.fantasyfootball.service.AuthService;
+import rs.fantasy.fantasyfootball.service.GameweekService;
 import rs.fantasy.fantasyfootball.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private GameweekService gameweekService;
 
     @Autowired
     private JwtService jwtService;
@@ -74,7 +78,7 @@ public class AuthController {
                         .body(new AuthResponse(null, null, null,
                                 "Nalog nije aktiviran. Proverite email."));
             }
-
+            gameweekService.updateStatusesOnLogin();
             String jwtToken = jwtService.generateToken(user);
 
             return ResponseEntity.ok(new AuthResponse(
@@ -83,6 +87,7 @@ public class AuthController {
                     user.getRole().name(),
                     "Uspešna prijava"
             ));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new AuthResponse(null, null, null,

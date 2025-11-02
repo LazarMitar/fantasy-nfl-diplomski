@@ -53,6 +53,127 @@
       </div>
     </div>
   </div>
+
+  <div class="stats-section" *ngIf="player">
+    <h3>📊 Season Statistics (2025-26)</h3>
+    <div *ngIf="finishedGameweeks.length === 0" class="no-stats-msg">
+      No finished gameweeks yet
+    </div>
+    
+    <!-- Offense Stats Table -->
+    <div *ngIf="finishedGameweeks.length > 0 && isOffensePlayer()" class="stats-table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Wk</th>
+            <th>Pass Yds</th>
+            <th>Pass TD</th>
+            <th>Int</th>
+            <th>Rush Yds</th>
+            <th>Rush TD</th>
+            <th>Rec Yds</th>
+            <th>Rec TD</th>
+            <th>Rec</th>
+            <th>Fum</th>
+            <th class="points-col">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gw of finishedGameweeks">
+            <td class="week-col">{{ gw.weekNumber }}</td>
+            <ng-container *ngIf="getStatsForGameweek(gw.id) as stats">
+              <td>{{ stats.passingYards || '-' }}</td>
+              <td>{{ stats.passingTouchdowns || '-' }}</td>
+              <td>{{ stats.interceptions || '-' }}</td>
+              <td>{{ stats.rushingYards || '-' }}</td>
+              <td>{{ stats.rushingTouchdowns || '-' }}</td>
+              <td>{{ stats.receivingYards || '-' }}</td>
+              <td>{{ stats.receivingTouchdowns || '-' }}</td>
+              <td>{{ stats.receivingReceptions || '-' }}</td>
+              <td>{{ stats.fumbles || '-' }}</td>
+              <td class="points-col">{{ stats.actualPoints?.toFixed(2) || '0.00' }}</td>
+            </ng-container>
+            <ng-container *ngIf="!getStatsForGameweek(gw.id)">
+              <td colspan="9" class="no-data">No stats</td>
+              <td class="points-col">0.00</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Defense Stats Table -->
+    <div *ngIf="finishedGameweeks.length > 0 && isDefensePlayer()" class="stats-table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Wk</th>
+            <th>Sacks</th>
+            <th>Int</th>
+            <th>Fum Rec</th>
+            <th>TD</th>
+            <th>Pts Allowed</th>
+            <th>Safety</th>
+            <th class="points-col">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gw of finishedGameweeks">
+            <td class="week-col">{{ gw.weekNumber }}</td>
+            <ng-container *ngIf="getStatsForGameweek(gw.id) as stats">
+              <td>{{ stats.sacks || '-' }}</td>
+              <td>{{ stats.interceptions || '-' }}</td>
+              <td>{{ stats.fumblesRecovered || '-' }}</td>
+              <td>{{ stats.touchdowns || '-' }}</td>
+              <td>{{ stats.pointsAllowed || '-' }}</td>
+              <td>{{ stats.saftey || '-' }}</td>
+              <td class="points-col">{{ stats.actualPoints?.toFixed(2) || '0.00' }}</td>
+            </ng-container>
+            <ng-container *ngIf="!getStatsForGameweek(gw.id)">
+              <td colspan="6" class="no-data">No stats</td>
+              <td class="points-col">0.00</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Special Team Stats Table -->
+    <div *ngIf="finishedGameweeks.length > 0 && isSpecialTeamPlayer()" class="stats-table-container">
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>Wk</th>
+            <th>FG Made</th>
+            <th>FG Miss</th>
+            <th>FG 50+</th>
+            <th>XP Made</th>
+            <th>XP Miss</th>
+            <th>Longest FG</th>
+            <th class="points-col">Pts</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let gw of finishedGameweeks">
+            <td class="week-col">{{ gw.weekNumber }}</td>
+            <ng-container *ngIf="getStatsForGameweek(gw.id) as stats">
+              <td>{{ stats.fieldGoalsMade || '-' }}</td>
+              <td>{{ stats.fieldGoalsMissed || '-' }}</td>
+              <td>{{ stats.fieldGoalsOver50Yards || '-' }}</td>
+              <td>{{ stats.extraPointsMade || '-' }}</td>
+              <td>{{ stats.extraPointsMissed || '-' }}</td>
+              <td>{{ stats.longestFieldGoal || '-' }}</td>
+              <td class="points-col">{{ stats.actualPoints?.toFixed(2) || '0.00' }}</td>
+            </ng-container>
+            <ng-container *ngIf="!getStatsForGameweek(gw.id)">
+              <td colspan="6" class="no-data">No stats</td>
+              <td class="points-col">0.00</td>
+            </ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- Injury Modal -->

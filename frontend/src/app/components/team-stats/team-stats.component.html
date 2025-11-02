@@ -1,0 +1,166 @@
+<div class="team-stats-container">
+  <div class="content-wrapper">
+    <div class="header">
+      <button class="back-btn" (click)="goBack()">
+        ← Back to Teams
+      </button>
+      <h1>{{ teamCode }} - Player Statistics</h1>
+      <p class="subtitle">Gameweek {{ gameweekId }}</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">
+      <p>Loading players...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <p>{{ error }}</p>
+    </div>
+
+    <div *ngIf="!loading && players.length > 0">
+    <!-- Offense Section -->
+    <div class="position-section" *ngIf="offensePlayers.length > 0">
+      <h2 class="section-title">🏈 OFFENSE ({{ offensePlayers.length }} players)</h2>
+      <div class="players-list">
+        <div *ngFor="let player of offensePlayers" class="player-card">
+          <div class="player-info">
+            <div class="checkmark" [class.has-stats]="hasStats(player.id)">
+              {{ hasStats(player.id) ? '✓' : '⚪' }}
+            </div>
+            <div class="player-details">
+              <h3>
+                {{ player.firstName }} {{ player.lastName }}
+                <img *ngIf="isInjuredDuringGameweek(player.id)" 
+                     src="/assets/injury.png" 
+                     alt="Injured" 
+                     class="injury-icon"
+                     title="Injured during this gameweek">
+              </h3>
+              <p class="position-team">{{ player.position }} - #{{ player.jerseyNumber }}</p>
+              <div *ngIf="hasStats(player.id)" class="stats-preview">
+                <span>{{ getStats(player.id)?.actualPoints?.toFixed(1) || 0 }} pts</span>
+              </div>
+              <div *ngIf="!hasStats(player.id)" class="no-stats">
+                No stats yet
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button 
+              *ngIf="!hasStats(player.id)" 
+              class="btn-add"
+              (click)="openAddStatsModal(player)">
+              Add Stats
+            </button>
+            <button 
+              *ngIf="hasStats(player.id)" 
+              class="btn-edit"
+              (click)="openEditStatsModal(player)">
+              Edit Stats
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Defense Section -->
+    <div class="position-section" *ngIf="defensePlayers.length > 0">
+      <h2 class="section-title">🛡️ DEFENSE ({{ defensePlayers.length }} players)</h2>
+      <div class="players-list">
+        <div *ngFor="let player of defensePlayers" class="player-card">
+          <div class="player-info">
+            <div class="checkmark" [class.has-stats]="hasStats(player.id)">
+              {{ hasStats(player.id) ? '✓' : '⚪' }}
+            </div>
+            <div class="player-details">
+              <h3>
+                {{ player.firstName }} {{ player.lastName }}
+                <img *ngIf="isInjuredDuringGameweek(player.id)" 
+                     src="/assets/injury.png" 
+                     alt="Injured" 
+                     class="injury-icon"
+                     title="Injured during this gameweek">
+              </h3>
+              <p class="position-team">{{ player.position }}</p>
+              <div *ngIf="hasStats(player.id)" class="stats-preview">
+                <span>{{ getStats(player.id)?.actualPoints?.toFixed(1) || 0 }} pts</span>
+              </div>
+              <div *ngIf="!hasStats(player.id)" class="no-stats">
+                No stats yet
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button 
+              *ngIf="!hasStats(player.id)" 
+              class="btn-add"
+              (click)="openAddStatsModal(player)">
+              Add Stats
+            </button>
+            <button 
+              *ngIf="hasStats(player.id)" 
+              class="btn-edit"
+              (click)="openEditStatsModal(player)">
+              Edit Stats
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Special Team Section -->
+    <div class="position-section" *ngIf="specialTeamPlayers.length > 0">
+      <h2 class="section-title">🎯 SPECIAL TEAMS ({{ specialTeamPlayers.length }} players)</h2>
+      <div class="players-list">
+        <div *ngFor="let player of specialTeamPlayers" class="player-card">
+          <div class="player-info">
+            <div class="checkmark" [class.has-stats]="hasStats(player.id)">
+              {{ hasStats(player.id) ? '✓' : '⚪' }}
+            </div>
+            <div class="player-details">
+              <h3>
+                {{ player.firstName }} {{ player.lastName }}
+                <img *ngIf="isInjuredDuringGameweek(player.id)" 
+                     src="/assets/injury.png" 
+                     alt="Injured" 
+                     class="injury-icon"
+                     title="Injured during this gameweek">
+              </h3>
+              <p class="position-team">{{ player.position }} - #{{ player.jerseyNumber }}</p>
+              <div *ngIf="hasStats(player.id)" class="stats-preview">
+                <span>{{ getStats(player.id)?.actualPoints?.toFixed(1) || 0 }} pts</span>
+              </div>
+              <div *ngIf="!hasStats(player.id)" class="no-stats">
+                No stats yet
+              </div>
+            </div>
+          </div>
+          <div class="actions">
+            <button 
+              *ngIf="!hasStats(player.id)" 
+              class="btn-add"
+              (click)="openAddStatsModal(player)">
+              Add Stats
+            </button>
+            <button 
+              *ngIf="hasStats(player.id)" 
+              class="btn-edit"
+              (click)="openEditStatsModal(player)">
+              Edit Stats
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Stats Modal -->
+<app-stats-modal
+  *ngIf="showModal"
+  [player]="selectedPlayer"
+  [gameweekId]="gameweekId"
+  [existingStats]="selectedStats"
+  (close)="closeModal()"
+  (saved)="onStatsSaved()">
+</app-stats-modal>

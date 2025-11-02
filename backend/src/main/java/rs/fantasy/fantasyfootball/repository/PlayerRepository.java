@@ -2,6 +2,7 @@ package rs.fantasy.fantasyfootball.repository;
 
 import rs.fantasy.fantasyfootball.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -9,4 +10,8 @@ import java.util.List;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByIdNotIn(List<Long> ids);
+    List<Player> findByTeam(String team);
+    
+    @Query("SELECT p.team, COUNT(p) FROM Player p GROUP BY p.team")
+    List<Object[]> countPlayersByTeam();
 }

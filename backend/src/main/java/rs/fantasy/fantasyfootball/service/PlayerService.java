@@ -50,4 +50,8 @@ public class PlayerService {
         playerRepository.deleteAll();
         playerRepository.saveAll(defaultPlayers);
     }
+
+    public List<Player> getPlayersByTeam(String team) {
+        return playerRepository.findByTeam(team);
+    }
 }

@@ -1,13 +1,14 @@
 package rs.fantasy.fantasyfootball.config;
 
-import rs.fantasy.fantasyfootball.model.Injury;
-import rs.fantasy.fantasyfootball.model.Player;
-import rs.fantasy.fantasyfootball.model.Position;
+import rs.fantasy.fantasyfootball.model.*;
+import rs.fantasy.fantasyfootball.repository.GameweekRepository;
 import rs.fantasy.fantasyfootball.repository.InjuryRepository;
 import rs.fantasy.fantasyfootball.repository.PlayerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Component
@@ -15,10 +16,13 @@ public class DataSeeder implements CommandLineRunner {
 
     private final PlayerRepository playerRepository;
     private final InjuryRepository injuryRepository;
+    private final GameweekRepository gameweekRepository;
 
-    public DataSeeder(PlayerRepository playerRepository, InjuryRepository injuryRepository) {
+
+    public DataSeeder(PlayerRepository playerRepository, InjuryRepository injuryRepository, GameweekRepository  gameweekRepository) {
         this.playerRepository = playerRepository;
         this.injuryRepository = injuryRepository;
+        this.gameweekRepository = gameweekRepository;
     }
 
     @Override
@@ -317,6 +321,27 @@ public class DataSeeder implements CommandLineRunner {
         else {
             System.out.println("ℹ️ DataSeeder: Players already exist, skipping seeding.");
         }
-    }
+
+        if (gameweekRepository.count() == 0) {
+            String season = "2025-26";
+            LocalDateTime firstStart = LocalDateTime.of(2025, 11, 6, 2, 15); // prvi četvrtak 2:15 AM
+            LocalDateTime start = firstStart;
+
+            for (int i = 1; i <= 18; i++) {
+                LocalDateTime end = start.plusDays(4).withHour(6).withMinute(0);
+
+                Gameweek gw = new Gameweek(i, season, start.truncatedTo(ChronoUnit.MINUTES), end);
+                gw.setStatus(GameweekStatus.NOT_STARTED_YET);
+                gameweekRepository.save(gw);
+                start = start.plusWeeks(1);
+            }
+
+            System.out.println("✅ DataSeeder: Default NFL gameweeks successfully inserted!.");
+        }
+        else
+        {
+            System.out.println("ℹ️ DataSeeder: Gameweeks already exist, skipping seeding.");
+
+        }    }
 }
 
