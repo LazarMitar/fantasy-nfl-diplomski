@@ -1,11 +1,13 @@
 package rs.fantasy.fantasyfootball.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.fantasy.fantasyfootball.dto.AssignInjuryRequest;
-import rs.fantasy.fantasyfootball.model.Player;
-import rs.fantasy.fantasyfootball.model.PlayerInjury;
-import rs.fantasy.fantasyfootball.model.Roster;
-import rs.fantasy.fantasyfootball.model.RosterPlayer;
+import rs.fantasy.fantasyfootball.dto.OffenseStatsRequest;
+import rs.fantasy.fantasyfootball.dto.DefenseStatsRequest;
+import rs.fantasy.fantasyfootball.dto.SpecialTeamStatsRequest;
+import rs.fantasy.fantasyfootball.model.*;
+import rs.fantasy.fantasyfootball.service.PlayerGameweekStatsService;
 import rs.fantasy.fantasyfootball.service.PlayerService;
 import rs.fantasy.fantasyfootball.service.PlayerInjuryService;
 import rs.fantasy.fantasyfootball.service.RosterPlayerService;
@@ -20,16 +22,24 @@ public class PlayerController {
     private final PlayerService playerService;
     private final PlayerInjuryService playerInjuryService;
     private final RosterPlayerService rosterPlayerService;
+    private final PlayerGameweekStatsService playerGameweekStatsService;
 
-    public PlayerController(PlayerService playerService, PlayerInjuryService playerInjuryService,  RosterPlayerService rosterPlayerService) {
+    public PlayerController(PlayerService playerService, PlayerInjuryService playerInjuryService,  RosterPlayerService rosterPlayerService,
+                            PlayerGameweekStatsService playerGameweekStatsService) {
         this.playerService = playerService;
         this.playerInjuryService = playerInjuryService;
         this.rosterPlayerService = rosterPlayerService;
+        this.playerGameweekStatsService = playerGameweekStatsService;
     }
 
     @GetMapping
     public List<Player> getAllPlayers() {
         return playerService.getAllPlayers();
+    }
+
+    @GetMapping("/team/{team}")
+    public List<Player> getPlayersByTeam(@PathVariable String team) {
+        return playerService.getPlayersByTeam(team);
     }
 
     @GetMapping("/available")
@@ -77,4 +87,53 @@ public class PlayerController {
         return playerInjuryService.getPlayerInjuries(playerId);
     }
 
+    @PostMapping("/offense/{playerId}/{gameweekId}")
+    public ResponseEntity<?> createOffenseStats(@PathVariable Long playerId,
+                                                 @PathVariable Long gameweekId,
+                                                 @RequestBody OffenseStatsRequest request) {
+        try {
+            OffenseStats stats = playerGameweekStatsService.createOffenseStats(playerId, gameweekId, request);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/defense/{playerId}/{gameweekId}")
+    public ResponseEntity<?> createDefenseStats(@PathVariable Long playerId,
+                                                 @PathVariable Long gameweekId,
+                                                 @RequestBody DefenseStatsRequest request) {
+        try {
+            DefenseStats stats = playerGameweekStatsService.createDefenseStats(playerId, gameweekId, request);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/special/{playerId}/{gameweekId}")
+    public ResponseEntity<?> createSpecialTeamStats(@PathVariable Long playerId,
+                                                     @PathVariable Long gameweekId,
+                                                     @RequestBody SpecialTeamStatsRequest request) {
+        try {
+            SpecialTeamStats stats = playerGameweekStatsService.createSpecialTeamStats(playerId, gameweekId, request);
+            return ResponseEntity.ok(stats);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{playerId}/{gameweekId}")
+    public ResponseEntity<PlayerGameweekStats> getStats(@PathVariable Long playerId,
+                                                         @PathVariable Long gameweekId) {
+        try {
+            PlayerGameweekStats stats = playerGameweekStatsService.getStatsForPlayer(playerId, gameweekId);
+            return ResponseEntity.ok(stats);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
+
+

@@ -61,5 +61,15 @@ export const routes: Routes = [
   {
     path: 'roster/:rosterId/create-trade',
     loadComponent: () => import('./components/create-trade/create-trade.component').then(m => m.CreateTradeComponent)
+  },
+  {
+    path: 'enter-stats',
+    loadComponent: () => import('./components/enter-stats/enter-stats.component').then(m => m.EnterStatsComponent),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'team-stats/:team',
+    loadComponent: () => import('./components/team-stats/team-stats.component').then(m => m.TeamStatsComponent),
+    canActivate: [adminGuard]
   }
 ];

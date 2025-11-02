@@ -71,4 +71,8 @@ export class HomeComponent implements OnInit {
   goToRosterDetails(rosterId: number) {
     this.router.navigate(['/roster', rosterId]);
   }
+
+  goToEnterStats() {
+    this.router.navigate(['/enter-stats']);
+  }
 }

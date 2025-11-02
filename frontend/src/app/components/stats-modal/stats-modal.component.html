@@ -1,0 +1,224 @@
+<div class="modal-overlay" (click)="cancel()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Edit' : 'Add' }} Stats: {{ player?.firstName }} {{ player?.lastName }}</h2>
+      <p class="player-info">{{ player?.position }} - Gameweek {{ gameweekId }}</p>
+      <button class="close-btn" (click)="cancel()">×</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="error" class="error-message">
+        {{ error }}
+      </div>
+
+      <div class="form-group">
+        <label>Projected Points:</label>
+        <input 
+          type="number" 
+          [(ngModel)]="projectedPoints" 
+          (ngModelChange)="onInputChange()"
+          step="0.1">
+      </div>
+
+      <!-- OFFENSE FORM -->
+      <div *ngIf="isOffensePlayer()" class="stats-section">
+        <h3>Passing Stats</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Passing Yards:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="passingYards" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Passing TDs:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="passingTouchdowns" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Interceptions:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="interceptions" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+
+        <h3>Rushing Stats</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rushing Yards:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="rushingYards" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Rushing TDs:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="rushingTouchdowns" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+
+        <h3>Receiving Stats</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Receiving Yards:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="receivingYards" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Receiving TDs:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="receivingTouchdowns" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Receptions:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="receivingReceptions" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+
+        <h3>Other</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Fumbles:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="fumbles" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- DEFENSE FORM -->
+      <div *ngIf="isDefensePlayer()" class="stats-section">
+        <h3>Defensive Stats</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Sacks:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="sacks" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Interceptions:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="defInterceptions" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Fumbles Recovered:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="fumblesRecovered" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Defensive TDs:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="defensiveTouchdowns" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Points Allowed:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="pointsAllowed" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Safeties:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="saftey" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <!-- SPECIAL TEAM FORM -->
+      <div *ngIf="isSpecialTeamPlayer()" class="stats-section">
+        <h3>Kicker Stats</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Field Goals Made:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="fieldGoalsMade" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Field Goals Missed:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="fieldGoalsMissed" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>FG Over 50 Yards:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="fieldGoalsOver50Yards" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Extra Points Made:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="extraPointsMade" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Extra Points Missed:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="extraPointsMissed" 
+              (ngModelChange)="onInputChange()">
+          </div>
+          <div class="form-group">
+            <label>Longest Field Goal:</label>
+            <input 
+              type="number" 
+              [(ngModel)]="longestFieldGoal" 
+              (ngModelChange)="onInputChange()">
+          </div>
+        </div>
+      </div>
+
+      <div class="calculated-points">
+        <h3>🔢 Calculated Actual Points:</h3>
+        <p class="points-display">{{ calculatedPoints.toFixed(2) }} pts</p>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="cancel()" [disabled]="saving">
+        Cancel
+      </button>
+      <button class="btn-save" (click)="save()" [disabled]="saving">
+        {{ saving ? 'Saving...' : 'Save Stats' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -24,18 +24,14 @@ public class GameweekService {
         List<Gameweek> all = gameweekRepository.findAll();
 
         for (Gameweek gw : all) {
-            if (gw.getStatus() == GameweekStatus.FINISHED) continue;
+            if (gw.getStatus() == GameweekStatus.FINISHED || gw.getStatus() == GameweekStatus.IN_PROGRESS) continue;
 
-            if (now.isBefore(gw.getStartTime())) {
-                gw.setStatus(GameweekStatus.NOT_STARTED_YET);
-            } else if (now.isAfter(gw.getEndTime())) {
-                gw.setStatus(GameweekStatus.FINISHED);
-            } else {
+            if (now.isBefore(gw.getEndTime()) && now.isAfter(gw.getStartTime())) {
                 gw.setStatus(GameweekStatus.IN_PROGRESS);
             }
-        }
 
-        gameweekRepository.saveAll(all);
+            gameweekRepository.saveAll(all);
+        }
     }
 
     public Gameweek getCurrentGameweek() {
@@ -44,5 +40,25 @@ public class GameweekService {
                 .filter(gw -> now.isAfter(gw.getStartTime()) && now.isBefore(gw.getEndTime()))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public Gameweek getInProgressGameweek() {
+        return gameweekRepository.findAll().stream()
+                .filter(gw -> gw.getStatus() == GameweekStatus.IN_PROGRESS)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public List<Gameweek> getAllGameweeks() {
+        return gameweekRepository.findAll();
+    }
+
+    @Transactional
+    public Gameweek finishGameweek(Long gameweekId) {
+        Gameweek gameweek = gameweekRepository.findById(gameweekId)
+                .orElseThrow(() -> new RuntimeException("Gameweek not found"));
+        
+        gameweek.setStatus(GameweekStatus.FINISHED);
+        return gameweekRepository.save(gameweek);
     }
 }

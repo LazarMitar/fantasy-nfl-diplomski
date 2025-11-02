@@ -17,6 +17,10 @@ export class PlayerService {
     return this.http.get<Player[]>(`${this.apiUrl}/players`);
   }
 
+  getPlayersByTeam(team: string): Observable<Player[]> {
+    return this.http.get<Player[]>(`${this.apiUrl}/players/team/${team}`);
+  }
+
   getAllAvailablePlayers(rosterId: number): Observable<Player[]> {
     return this.http.get<Player[]>(`${this.apiUrl}/players/available`, {
       params: { rosterId: rosterId.toString() }

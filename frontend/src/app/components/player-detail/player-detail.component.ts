@@ -4,8 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { InjuryService } from '../../services/injury.service';
+import { GameweekService } from '../../services/gameweek.service';
+import { StatsService } from '../../services/stats.service';
 import { Player } from '../../models/player.model';
 import { Injury, PlayerInjury, AssignInjuryRequest } from '../../models/injury.model';
+import { Gameweek } from '../../models/gameweek.model';
+import { PlayerGameweekStats } from '../../models/stats.model';
 
 @Component({
   selector: 'app-player-detail',
@@ -18,6 +22,8 @@ export class PlayerDetailComponent implements OnInit {
   player: Player | null = null;
   playerInjuries: PlayerInjury[] = [];
   allInjuries: Injury[] = [];
+  finishedGameweeks: Gameweek[] = [];
+  gameweekStats: Map<number, PlayerGameweekStats> = new Map();
   isLoading = false;
   showInjuryModal = false;
   
@@ -61,7 +67,9 @@ export class PlayerDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private playerService: PlayerService,
-    private injuryService: InjuryService
+    private injuryService: InjuryService,
+    private gameweekService: GameweekService,
+    private statsService: StatsService
   ) {}
 
   ngOnInit() {
@@ -70,6 +78,7 @@ export class PlayerDetailComponent implements OnInit {
       this.loadPlayer(Number(playerId));
       this.loadPlayerInjuries(Number(playerId));
       this.loadAllInjuries();
+      this.loadFinishedGameweeksAndStats(Number(playerId));
     }
   }
 
@@ -141,6 +150,48 @@ export class PlayerDetailComponent implements OnInit {
 
   getTeamLogo(team: string): string {
     return this.teamLogos[team] || '/assets/teams/cardinals.png';
+  }
+
+  loadFinishedGameweeksAndStats(playerId: number): void {
+    this.gameweekService.getAllGameweeks().subscribe({
+      next: (gameweeks) => {
+        // Filter finished gameweeks for season 2025-26
+        this.finishedGameweeks = gameweeks
+          .filter(gw => gw.status === 'FINISHED' && gw.season === '2025-26')
+          .sort((a, b) => a.weekNumber - b.weekNumber);
+
+        // Load stats for each finished gameweek
+        this.finishedGameweeks.forEach(gw => {
+          this.statsService.getStatsByPlayerAndGameweek(playerId, gw.id).subscribe({
+            next: (stats) => {
+              this.gameweekStats.set(gw.id, stats);
+            },
+            error: () => {
+              // No stats for this gameweek
+            }
+          });
+        });
+      },
+      error: (err) => {
+        console.error('Error loading gameweeks', err);
+      }
+    });
+  }
+
+  getStatsForGameweek(gameweekId: number): any {
+    return this.gameweekStats.get(gameweekId);
+  }
+
+  isOffensePlayer(): boolean {
+    return this.player ? ['QB', 'RB', 'WR', 'TE'].includes(this.player.position) : false;
+  }
+
+  isDefensePlayer(): boolean {
+    return this.player?.position === 'DEF';
+  }
+
+  isSpecialTeamPlayer(): boolean {
+    return this.player?.position === 'K';
   }
 
   isCurrentlyInjured(): boolean {

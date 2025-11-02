@@ -203,6 +203,184 @@
   border-bottom: none;
 }
 
+/* Stats Section */
+.stats-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  margin: 30px auto 0;
+  max-height: 500px;
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-list {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.stats-section h3 {
+  font-size: 24px;
+  margin: 0 0 20px 0;
+  color: #333;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.no-stats-msg {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+}
+
+.stats-item {
+  padding: 16px;
+  border: 2px solid #ecf0f1;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+  background: white;
+}
+
+.stats-item:hover {
+  border-color: #3498db;
+  box-shadow: 0 3px 10px rgba(52, 152, 219, 0.2);
+  transform: translateX(5px);
+}
+
+.gameweek-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.gameweek-header strong {
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.finished {
+  background: #95a5a6;
+  color: white;
+}
+
+.stats-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #7f8c8d;
+  font-weight: 500;
+}
+
+.stat-value {
+  font-size: 16px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.stat-value.actual {
+  color: #3498db;
+  font-size: 18px;
+}
+
+.no-stats-gameweek {
+  padding: 10px;
+  text-align: center;
+  color: #95a5a6;
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Stats Table */
+.stats-table-container {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.stats-table thead {
+  background: #f5f5f5;
+  position: sticky;
+  top: 0;
+}
+
+.stats-table th {
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #ddd;
+  white-space: nowrap;
+}
+
+.stats-table tbody tr {
+  border-bottom: 1px solid #ecf0f1;
+  transition: background 0.2s;
+}
+
+.stats-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.stats-table tbody tr:hover {
+  background: #f0f8ff;
+}
+
+.stats-table td {
+  padding: 12px 8px;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.week-col {
+  font-weight: 700;
+  color: #3498db;
+  font-size: 15px;
+}
+
+.points-col {
+  font-weight: 700;
+  color: #3498db;
+  font-size: 16px;
+  background: rgba(52, 152, 219, 0.05);
+}
+
+.no-data {
+  text-align: center;
+  color: #95a5a6;
+  font-style: italic;
+}
+
 .injury-info {
   display: flex;
   flex-direction: column;
