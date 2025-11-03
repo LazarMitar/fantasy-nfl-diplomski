@@ -268,6 +268,64 @@
           </div>
         </div>
       </div>
+
+      <!-- My Matches Section - Outside field-container -->
+      <div class="matches-section" *ngIf="duels.length > 0 && currentDuel">
+        <h3>My Matches</h3>
+        <div class="match-card" (click)="goToMatchDetails()">
+          <div class="match-navigation">
+            <button class="nav-btn" (click)="previousDuel(); $event.stopPropagation()" [disabled]="currentDuelIndex === 0">
+              ◀
+            </button>
+            <span class="week-info">Week {{ currentDuel.gameweek.weekNumber }} of {{ duels.length }}</span>
+            <button class="nav-btn" (click)="nextDuel(); $event.stopPropagation()" [disabled]="currentDuelIndex === duels.length - 1">
+              ▶
+            </button>
+          </div>
+
+          <div class="match-content">
+            <div class="team my-team">
+              <span class="team-name">{{ roster?.name }}</span>
+              <span class="team-indicator">{{ isHomeTeam() ? '🏠' : '🏈' }}</span>
+              <span class="team-score" *ngIf="currentDuel.status !== DuelStatus.PENDING">
+                {{ getMyScore().toFixed(1) }}
+              </span>
+            </div>
+
+            <div class="match-vs">
+              <span *ngIf="currentDuel.status === DuelStatus.PENDING">VS</span>
+              <span *ngIf="currentDuel.status === DuelStatus.IN_PROGRESS" class="live-badge">🔴 LIVE</span>
+              <span *ngIf="currentDuel.status === DuelStatus.COMPLETED">-</span>
+            </div>
+
+            <div class="team opponent-team">
+              <span class="team-name">{{ getOpponentName() }}</span>
+              <span class="team-indicator">{{ isHomeTeam() ? '🏈' : '🏠' }}</span>
+              <span class="team-score" *ngIf="currentDuel.status !== DuelStatus.PENDING">
+                {{ getOpponentScore().toFixed(1) }}
+              </span>
+            </div>
+          </div>
+
+          <div class="match-status">
+            <span *ngIf="currentDuel.status === DuelStatus.PENDING" class="status-pending">
+              📅 Upcoming
+            </span>
+            <span *ngIf="currentDuel.status === DuelStatus.IN_PROGRESS" class="status-live">
+              🔴 In Progress
+            </span>
+            <span *ngIf="currentDuel.status === DuelStatus.COMPLETED && getDuelResult() === 'WON'" class="status-won">
+              ✅ YOU WON!
+            </span>
+            <span *ngIf="currentDuel.status === DuelStatus.COMPLETED && getDuelResult() === 'LOST'" class="status-lost">
+              ❌ YOU LOST
+            </span>
+            <span *ngIf="currentDuel.status === DuelStatus.COMPLETED && getDuelResult() === 'DRAW'" class="status-draw">
+              🤝 DRAW
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

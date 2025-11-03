@@ -1,5 +1,6 @@
 package rs.fantasy.fantasyfootball.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
         @UniqueConstraint(columnNames = {"home_roster_id", "away_roster_id", "gameweek_id"})
     }
 )
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Duel {
 
     @Id

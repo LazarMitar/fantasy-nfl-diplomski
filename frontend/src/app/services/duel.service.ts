@@ -23,5 +23,9 @@ export class DuelService {
   getDuelsByRoster(rosterId: number): Observable<Duel[]> {
     return this.http.get<Duel[]>(`${this.apiUrl}/duels/roster/${rosterId}`);
   }
+
+  getDuelById(duelId: number): Observable<Duel> {
+    return this.http.get<Duel>(`${this.apiUrl}/duels/${duelId}`);
+  }
 }
 

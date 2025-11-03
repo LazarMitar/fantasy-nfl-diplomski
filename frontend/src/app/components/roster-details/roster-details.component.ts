@@ -5,9 +5,11 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PlayerService } from '../../services/player.service';
 import { RosterService } from '../../services/roster.service';
 import { TradeService } from '../../services/trade.service';
+import { DuelService } from '../../services/duel.service';
 import { Player, Position } from '../../models/player.model';
 import { Roster, RosterPlayer } from '../../models/roster.model';
 import { Trade } from '../../models/trade.model';
+import { Duel, DuelStatus } from '../../models/duel.model';
 
 @Component({
   selector: 'app-roster-details',
@@ -43,12 +45,19 @@ export class RosterDetailsComponent implements OnInit {
   // Pending trades
   pendingTrades: Trade[] = [];
 
+  // Duels
+  duels: Duel[] = [];
+  currentDuelIndex: number = 0;
+  currentDuel: Duel | null = null;
+  DuelStatus = DuelStatus; // For use in template
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private rosterService: RosterService,
     private playerService: PlayerService,
-    private tradeService: TradeService
+    private tradeService: TradeService,
+    private duelService: DuelService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +65,7 @@ export class RosterDetailsComponent implements OnInit {
     this.loadRosterData();
     this.loadAllAvailablePlayers(this.rosterId);
     this.loadPendingTrades();
+    this.loadDuels();
   }
 
   loadRosterData(): void {
@@ -487,6 +497,86 @@ export class RosterDetailsComponent implements OnInit {
         console.error(err);
       }
     });
+  }
+
+  loadDuels(): void {
+    this.duelService.getDuelsByRoster(this.rosterId).subscribe({
+      next: (duels) => {
+        this.duels = duels.sort((a, b) => 
+          a.gameweek.weekNumber - b.gameweek.weekNumber
+        );
+        
+        if (this.duels.length > 0) {
+          // Default: prvi pending/in_progress ili prvi duel
+          const nextIndex = this.duels.findIndex(d => 
+            d.status === DuelStatus.PENDING || d.status === DuelStatus.IN_PROGRESS
+          );
+          this.currentDuelIndex = nextIndex !== -1 ? nextIndex : 0;
+          this.currentDuel = this.duels[this.currentDuelIndex];
+        }
+      },
+      error: (err) => {
+        console.error('Error loading duels:', err);
+      }
+    });
+  }
+
+  previousDuel(): void {
+    if (this.currentDuelIndex > 0) {
+      this.currentDuelIndex--;
+      this.currentDuel = this.duels[this.currentDuelIndex];
+    }
+  }
+
+  nextDuel(): void {
+    if (this.currentDuelIndex < this.duels.length - 1) {
+      this.currentDuelIndex++;
+      this.currentDuel = this.duels[this.currentDuelIndex];
+    }
+  }
+
+  isHomeTeam(): boolean {
+    return this.currentDuel?.homeRoster?.id === this.rosterId;
+  }
+
+  getOpponentName(): string {
+    if (!this.currentDuel) return '';
+    return this.isHomeTeam() 
+      ? this.currentDuel.awayRoster.name 
+      : this.currentDuel.homeRoster.name;
+  }
+
+  getMyScore(): number {
+    if (!this.currentDuel) return 0;
+    return this.isHomeTeam() 
+      ? this.currentDuel.homePoints 
+      : this.currentDuel.awayPoints;
+  }
+
+  getOpponentScore(): number {
+    if (!this.currentDuel) return 0;
+    return this.isHomeTeam() 
+      ? this.currentDuel.awayPoints 
+      : this.currentDuel.homePoints;
+  }
+
+  getDuelResult(): string {
+    if (!this.currentDuel || this.currentDuel.status !== DuelStatus.COMPLETED) {
+      return '';
+    }
+    
+    const myScore = this.getMyScore();
+    const opponentScore = this.getOpponentScore();
+    
+    if (myScore > opponentScore) return 'WON';
+    if (myScore < opponentScore) return 'LOST';
+    return 'DRAW';
+  }
+
+  goToMatchDetails(): void {
+    if (this.currentDuel && this.currentDuel.id) {
+      this.router.navigate(['/roster', this.rosterId, 'match', this.currentDuel.id]);
+    }
   }
 }
 

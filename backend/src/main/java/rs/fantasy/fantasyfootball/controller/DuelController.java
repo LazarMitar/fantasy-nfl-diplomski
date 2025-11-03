@@ -81,5 +81,15 @@ public class DuelController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @GetMapping("/{duelId}")
+    public ResponseEntity<Duel> getDuelById(@PathVariable Long duelId) {
+        try {
+            Duel duel = duelService.getDuelById(duelId);
+            return ResponseEntity.ok(duel);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
 

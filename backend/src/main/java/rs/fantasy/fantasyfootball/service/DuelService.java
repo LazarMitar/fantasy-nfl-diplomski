@@ -146,5 +146,13 @@ public class DuelService {
     public List<Duel> getDuelsByStatus(DuelStatus status) {
         return duelRepository.findByStatus(status);
     }
+
+    public Duel getDuelById(Long duelId) {
+        Duel duel = duelRepository.findByIdWithRelations(duelId);
+        if (duel == null) {
+            throw new RuntimeException("Duel not found");
+        }
+        return duel;
+    }
 }
 
