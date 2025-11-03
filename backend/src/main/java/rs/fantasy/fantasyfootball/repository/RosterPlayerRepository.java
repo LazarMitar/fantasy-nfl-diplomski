@@ -13,6 +13,8 @@ public interface RosterPlayerRepository extends JpaRepository<RosterPlayer, Long
 
     List<RosterPlayer> findByRosterId(Long rosterId);
 
+    List<RosterPlayer> findByRosterIdAndStarter(Long rosterId, boolean starter);
+
     boolean existsByRosterIdAndPlayerId(Long rosterId, Long playerId);
 
     @Query("SELECT CASE WHEN COUNT(rp) > 0 THEN TRUE ELSE FALSE END FROM " +

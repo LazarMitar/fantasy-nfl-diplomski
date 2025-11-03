@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LeagueService } from '../../services/league.service';
 import { RosterService } from '../../services/roster.service';
@@ -58,6 +59,7 @@ export class LeagueDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private location: Location,
     private leagueService: LeagueService,
     private rosterService: RosterService,
     private duelService: DuelService
@@ -126,8 +128,16 @@ export class LeagueDetailsComponent implements OnInit {
     return percentage.toFixed(3);
   }
 
-  goBack() {
-    this.router.navigate(['/my-leagues']);
+  goBack(): void {
+    const role = localStorage.getItem('role');
+    
+    if (role === 'ADMIN') {
+      this.router.navigate(['/home']);
+    } else if (role === 'REGISTRATED_USER') {
+      this.location.back(); 
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 
   isAdmin(): boolean {

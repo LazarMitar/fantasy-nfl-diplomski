@@ -20,9 +20,16 @@
             <h3>{{ player.player.firstName }} {{ player.player.lastName }}</h3>
             <p class="player-details">{{ player.player.team }} - {{ player.player.position }}</p>
             <p class="player-price">${{ player.player.price }}M</p>
-            <p *ngIf="player.starter" class="starter-badge">STARTER</p>
-            <p *ngIf="!player.starter" class="bench-badge">BENCH</p>
-            <p *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</p>
+            <div class="badges">
+              <span *ngIf="player.starter" class="starter-badge">STARTER</span>
+              <span *ngIf="!player.starter" class="bench-badge">BENCH</span>
+              <span *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</span>
+            </div>
+          </div>
+          <div class="player-points">
+            <span class="points-label">Points:</span>
+            <span class="points-value">{{ getPlayerPoints(player.player.id, player.captain).toFixed(1) }}</span>
+            <span *ngIf="player.captain" class="captain-multiplier">(×2)</span>
           </div>
         </div>
       </div>
@@ -84,9 +91,16 @@
             <h3>{{ player.player.firstName }} {{ player.player.lastName }}</h3>
             <p class="player-details">{{ player.player.team }} - {{ player.player.position }}</p>
             <p class="player-price">${{ player.player.price }}M</p>
-            <p *ngIf="player.starter" class="starter-badge">STARTER</p>
-            <p *ngIf="!player.starter" class="bench-badge">BENCH</p>
-            <p *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</p>
+            <div class="badges">
+              <span *ngIf="player.starter" class="starter-badge">STARTER</span>
+              <span *ngIf="!player.starter" class="bench-badge">BENCH</span>
+              <span *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</span>
+            </div>
+          </div>
+          <div class="player-points">
+            <span class="points-label">Points:</span>
+            <span class="points-value">{{ getPlayerPoints(player.player.id, player.captain).toFixed(1) }}</span>
+            <span *ngIf="player.captain" class="captain-multiplier">(×2)</span>
           </div>
         </div>
       </div>

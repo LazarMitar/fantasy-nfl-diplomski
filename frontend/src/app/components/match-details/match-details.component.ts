@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DuelService } from '../../services/duel.service';
 import { RosterService } from '../../services/roster.service';
+import { StatsService } from '../../services/stats.service';
 import { Duel, DuelStatus } from '../../models/duel.model';
 import { RosterPlayer } from '../../models/roster.model';
+import { PlayerGameweekStats } from '../../models/stats.model';
 
 @Component({
   selector: 'app-match-details',
@@ -21,12 +23,14 @@ export class MatchDetailsComponent implements OnInit {
   opponentRosterPlayers: RosterPlayer[] = [];
   isLoading = true;
   DuelStatus = DuelStatus;
+  playerStats: Map<number, PlayerGameweekStats> = new Map();
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private duelService: DuelService,
-    private rosterService: RosterService
+    private rosterService: RosterService,
+    private statsService: StatsService
   ) {}
 
   ngOnInit(): void {
@@ -56,7 +60,9 @@ export class MatchDetailsComponent implements OnInit {
             this.rosterService.getRosterPlayers(opponentRosterId).subscribe({
               next: (opponentPlayers) => {
                 this.opponentRosterPlayers = opponentPlayers;
-                this.isLoading = false;
+                
+                // Load stats for all players
+                this.loadPlayerStats(duel.gameweek.id);
               },
               error: (err) => {
                 console.error('Error loading opponent roster:', err);
@@ -92,7 +98,13 @@ export class MatchDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/roster', this.myRosterId]);
+    const role = localStorage.getItem('role');
+    
+    if (role === 'REGISTRATED_USER') {
+      this.router.navigate(['/roster', this.myRosterId]);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
 
   getTeamColor(team: string): string {
@@ -129,6 +141,42 @@ export class MatchDetailsComponent implements OnInit {
       'TEN': '/assets/teams/titans.png', 'WAS': '/assets/teams/commanders.png'
     };
     return teamLogos[team] || '/assets/teams/cardinals.png';
+  }
+
+  loadPlayerStats(gameweekId: number): void {
+    const allPlayers = [...this.myRosterPlayers, ...this.opponentRosterPlayers];
+    
+    allPlayers.forEach(rp => {
+      this.statsService.getStatsByPlayerAndGameweek(rp.player.id, gameweekId).subscribe({
+        next: (stats) => {
+          this.playerStats.set(rp.player.id, stats);
+          
+          // Check if all stats loaded
+          if (this.playerStats.size === allPlayers.length) {
+            this.isLoading = false;
+          }
+        },
+        error: () => {
+          // No stats for this player - that's ok, will show 0
+          this.playerStats.set(rp.player.id, { actualPoints: 0 } as PlayerGameweekStats);
+          
+          if (this.playerStats.size === allPlayers.length) {
+            this.isLoading = false;
+          }
+        }
+      });
+    });
+    
+    // If no players, stop loading
+    if (allPlayers.length === 0) {
+      this.isLoading = false;
+    }
+  }
+
+  getPlayerPoints(playerId: number, isCaptain: boolean): number {
+    const stats = this.playerStats.get(playerId);
+    const basePoints = stats?.actualPoints || 0;
+    return isCaptain ? basePoints * 2 : basePoints;
   }
 }
 

@@ -113,6 +113,16 @@
   width: 60px;
 }
 
+.trophy {
+  font-size: 1.5em;
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
 .team-cell {
   min-width: 200px;
 }
