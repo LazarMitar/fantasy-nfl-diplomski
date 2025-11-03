@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LeagueService } from '../../services/league.service';
 import { RosterService } from '../../services/roster.service';
+import { DuelService } from '../../services/duel.service';
 import { League } from '../../models/league.model';
 import { Roster } from '../../models/roster.model';
 
@@ -58,7 +59,8 @@ export class LeagueDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private leagueService: LeagueService,
-    private rosterService: RosterService
+    private rosterService: RosterService,
+    private duelService: DuelService
   ) {}
 
   ngOnInit() {
@@ -126,5 +128,38 @@ export class LeagueDetailsComponent implements OnInit {
 
   goBack() {
     this.router.navigate(['/my-leagues']);
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('role') === 'ADMIN';
+  }
+
+  closeAndGenerateDuels() {
+    if (!this.league || !this.league.id) return;
+
+    if (!confirm('This will close the league and generate the season schedule. This action cannot be undone. Continue?')) {
+      return;
+    }
+
+    const leagueId = this.league.id;
+    this.duelService.closeLeagueAndGenerateDuels(leagueId).subscribe({
+      next: (response) => {
+        alert(`Success! League closed and ${response.totalDuels} duels generated for ${response.teamsCount} teams.`);
+        this.loadLeagueDetails(leagueId);
+      },
+      error: (error) => {
+        const errorMsg = error.error?.error || 'Failed to close league and generate duels. Please try again.';
+        alert('Error: ' + errorMsg);
+        console.error(error);
+      }
+    });
+  }
+
+  canCloseAndGenerate(): boolean {
+    if (!this.league) return false;
+    // Backend vraća 'available', ne 'isAvailable'
+    const isAvailable = this.league.available !== undefined ? this.league.available : this.league.isAvailable;
+    // Prikaži dugme samo ako je liga otvorena I ima dovoljno timova
+    return isAvailable === true && this.rosters.length >= 2;
   }
 }
