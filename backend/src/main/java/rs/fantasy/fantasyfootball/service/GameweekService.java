@@ -61,4 +61,10 @@ public class GameweekService {
         gameweek.setStatus(GameweekStatus.FINISHED);
         return gameweekRepository.save(gameweek);
     }
+
+    public boolean isGameweekInProgress(String season) {
+        return gameweekRepository.findAll().stream()
+                .anyMatch(gw -> gw.getSeason().equals(season) 
+                             && gw.getStatus() == GameweekStatus.IN_PROGRESS);
+    }
 }

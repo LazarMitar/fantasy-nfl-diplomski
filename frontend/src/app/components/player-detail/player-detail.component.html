@@ -33,9 +33,14 @@
       </div>
     </div>
 
-    <button class="add-injury-btn" (click)="openInjuryModal()">
-      Add Injury
-    </button>
+    <div *ngIf="isAdmin()" class="admin-actions">
+      <button class="edit-btn" (click)="openEditModal()">
+        ✏️ Edit Player
+      </button>
+      <button class="add-injury-btn" (click)="openInjuryModal()">
+        🩹 Add Injury
+      </button>
+    </div>
   </div>
 
   <div class="injuries-section">
@@ -174,6 +179,98 @@
       </table>
     </div>
   </div>
+</div>
+
+<!-- Edit Player Modal -->
+<div class="modal-backdrop" *ngIf="showEditModal" (click)="closeEditModal()"></div>
+<div class="modal" *ngIf="showEditModal">
+  <div class="modal-header">
+    <h3>Edit Player</h3>
+    <button class="close-btn" (click)="closeEditModal()">×</button>
+  </div>
+  
+  <form (ngSubmit)="submitEdit()" class="modal-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>First Name *</label>
+        <input type="text" [(ngModel)]="editForm.firstName" name="firstName" required>
+      </div>
+
+      <div class="form-group">
+        <label>Last Name *</label>
+        <input type="text" [(ngModel)]="editForm.lastName" name="lastName" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Position *</label>
+        <select [(ngModel)]="editForm.position" name="position" required>
+          <option value="QB">QB</option>
+          <option value="RB">RB</option>
+          <option value="WR">WR</option>
+          <option value="TE">TE</option>
+          <option value="K">K</option>
+          <option value="DEF">DEF</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Team *</label>
+        <select [(ngModel)]="editForm.team" name="team" required>
+          <option value="ARI">ARI - Cardinals</option>
+          <option value="ATL">ATL - Falcons</option>
+          <option value="BAL">BAL - Ravens</option>
+          <option value="BUF">BUF - Bills</option>
+          <option value="CAR">CAR - Panthers</option>
+          <option value="CHI">CHI - Bears</option>
+          <option value="CIN">CIN - Bengals</option>
+          <option value="CLE">CLE - Browns</option>
+          <option value="DAL">DAL - Cowboys</option>
+          <option value="DEN">DEN - Broncos</option>
+          <option value="DET">DET - Lions</option>
+          <option value="GB">GB - Packers</option>
+          <option value="HOU">HOU - Texans</option>
+          <option value="IND">IND - Colts</option>
+          <option value="JAX">JAX - Jaguars</option>
+          <option value="KC">KC - Chiefs</option>
+          <option value="LAC">LAC - Chargers</option>
+          <option value="LAR">LAR - Rams</option>
+          <option value="LV">LV - Raiders</option>
+          <option value="MIA">MIA - Dolphins</option>
+          <option value="MIN">MIN - Vikings</option>
+          <option value="NE">NE - Patriots</option>
+          <option value="NO">NO - Saints</option>
+          <option value="NYG">NYG - Giants</option>
+          <option value="NYJ">NYJ - Jets</option>
+          <option value="PHI">PHI - Eagles</option>
+          <option value="PIT">PIT - Steelers</option>
+          <option value="SF">SF - 49ers</option>
+          <option value="SEA">SEA - Seahawks</option>
+          <option value="TB">TB - Buccaneers</option>
+          <option value="TEN">TEN - Titans</option>
+          <option value="WAS">WAS - Commanders</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Jersey Number</label>
+        <input type="number" [(ngModel)]="editForm.jerseyNumber" name="jerseyNumber" min="0" max="99">
+      </div>
+
+      <div class="form-group">
+        <label>Price (M) *</label>
+        <input type="number" [(ngModel)]="editForm.price" name="price" step="0.1" min="0" required>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" (click)="closeEditModal()">Cancel</button>
+      <button type="submit">Update Player</button>
+    </div>
+  </form>
 </div>
 
 <!-- Injury Modal -->

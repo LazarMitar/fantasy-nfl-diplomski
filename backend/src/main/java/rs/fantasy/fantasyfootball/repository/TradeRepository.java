@@ -11,4 +11,8 @@ public interface TradeRepository extends JpaRepository<Trade, Long> {
     @Query("SELECT t FROM Trade t WHERE (t.initiatorRosterPlayer.roster.id = :rosterId OR " +
             "t.receiverRosterPlayer.roster.id = :rosterId) AND t.status = 'PENDING'")
     List<Trade> getMyPendingTrades(Long rosterId);
+
+    @Query("SELECT COUNT(t) > 0 FROM Trade t WHERE (t.initiatorRosterPlayer.id = :rosterPlayerId OR " +
+            "t.receiverRosterPlayer.id = :rosterPlayerId) AND t.status = 'PENDING'")
+    boolean hasPendingTradeForRosterPlayer(@Param("rosterPlayerId") Long rosterPlayerId);
 }

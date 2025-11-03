@@ -3,6 +3,7 @@
     <h1>{{ roster?.name || 'Roster' }}</h1>
     <p class="subtitle">{{ roster?.league?.name }}</p>
     <div class="header-buttons">
+      <button class="league-table-btn" (click)="goToLeagueTable()">📊 League Table</button>
       <button class="trade-btn" (click)="goToCreateTrade()">🔄 Create trade</button>
       <button class="back-btn" (click)="goBack()">← Back</button>
     </div>
@@ -63,7 +64,8 @@
         <div *ngIf="!isLoading" class="players-list">
           <div *ngFor="let player of filteredPlayers" 
                class="player-card" 
-               [ngStyle]="{'background-color': getTeamColor(player.team)}">
+               [ngStyle]="{'background-color': getTeamColor(player.team)}"
+               (click)="goToPlayerDetails(player.id)">
             <img class="team-logo" [src]="getTeamLogo(player.team)" [alt]="player.team">
             <div class="player-info">
               <h3>{{ player.firstName }} {{ player.lastName }}</h3>
@@ -184,7 +186,8 @@
             <div *ngFor="let starter of getStarterPlayers()" 
                  class="player-card-field"
                  [class.selected]="selectedStarterId === starter.player.id"
-                 [ngStyle]="{'background-color': getTeamColor(starter.player.team)}">
+                 [ngStyle]="{'background-color': getTeamColor(starter.player.team)}"
+                 (click)="goToPlayerDetails(starter.player.id)">
               <button class="remove-field-btn" (click)="removePlayerFromRoster(starter.player.id); $event.stopPropagation()">✕</button>
               <button class="swap-btn" (click)="toggleStarterSelection(starter.player.id); $event.stopPropagation()" title="Swap with bench">⇄</button>
               <span class="player-price">${{ starter.player.price }}M</span>
@@ -211,7 +214,8 @@
               <div *ngFor="let bench of getBenchPlayers()" 
                    class="player-card-field bench-card"
                    [class.selected]="selectedBenchId === bench.player.id"
-                   [ngStyle]="{'background-color': getTeamColor(bench.player.team)}">
+                   [ngStyle]="{'background-color': getTeamColor(bench.player.team)}"
+                   (click)="goToPlayerDetails(bench.player.id)">
                 <button class="remove-field-btn" (click)="removePlayerFromRoster(bench.player.id); $event.stopPropagation()">✕</button>
                 <button class="swap-btn" (click)="toggleBenchSelection(bench.player.id); $event.stopPropagation()" title="Swap with starters">⇄</button>
                 <span class="player-price">${{ bench.player.price }}M</span>
@@ -235,12 +239,13 @@
             <h3>Captain</h3>
             <div class="captain-display">
               <div *ngIf="getCaptain(); else noCaptain" class="captain-card" 
-                   [ngStyle]="{'background-color': getTeamColor(getCaptain()!.player.team)}">
+                   [ngStyle]="{'background-color': getTeamColor(getCaptain()!.player.team)}"
+                   (click)="goToPlayerDetails(getCaptain()!.player.id)">
                 <span class="captain-badge">C</span>
                 <img class="captain-team-logo" [src]="getTeamLogo(getCaptain()!.player.team)" [alt]="getCaptain()!.player.team">
                 <span class="captain-name">{{ getCaptain()!.player.firstName }} {{ getCaptain()!.player.lastName }}</span>
                 <span class="captain-position">{{ getCaptain()!.player.position }}</span>
-                <button class="remove-captain-btn" (click)="removeCaptain()">✕</button>
+                <button class="remove-captain-btn" (click)="removeCaptain(); $event.stopPropagation()">✕</button>
               </div>
               <ng-template #noCaptain>
                 <div class="no-captain">

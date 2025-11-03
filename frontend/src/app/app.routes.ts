@@ -31,8 +31,7 @@ export const routes: Routes = [
   },
   {
     path: 'players/:id',
-    loadComponent: () => import('./components/player-detail/player-detail.component').then(m => m.PlayerDetailComponent),
-    canActivate: [adminGuard]
+    loadComponent: () => import('./components/player-detail/player-detail.component').then(m => m.PlayerDetailComponent)
   },
   {
     path: 'create-league',
@@ -46,8 +45,7 @@ export const routes: Routes = [
   },
   {
     path: 'my-leagues/:id',
-    loadComponent: () => import('./components/league-details/league-details.component').then(m => m.LeagueDetailsComponent),
-    canActivate: [adminGuard]
+    loadComponent: () => import('./components/league-details/league-details.component').then(m => m.LeagueDetailsComponent)
   },
   {
     path: 'available-leagues',

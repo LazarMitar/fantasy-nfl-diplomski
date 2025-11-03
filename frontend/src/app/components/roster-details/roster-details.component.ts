@@ -192,6 +192,16 @@ export class RosterDetailsComponent implements OnInit {
     this.router.navigate(['/roster', this.rosterId, 'create-trade']);
   }
 
+  goToLeagueTable(): void {
+    if (this.roster?.league?.id) {
+      this.router.navigate(['/my-leagues', this.roster.league.id]);
+    }
+  }
+
+  goToPlayerDetails(playerId: number): void {
+    this.router.navigate(['/players', playerId]);
+  }
+
   getTeamColor(team: string): string {
     const teamColors: { [key: string]: string } = {
       'ARI': '#97233F', 'ATL': '#a71930', 'BAL': '#241773', 'BUF': '#00338d',
