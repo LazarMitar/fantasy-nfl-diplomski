@@ -27,7 +27,10 @@
         </thead>
         <tbody>
           <tr *ngFor="let roster of rosters; let i = index">
-            <td class="rank">{{ i + 1 }}</td>
+            <td class="rank">
+              <span *ngIf="i === 0" class="trophy">🏆</span>
+              <span *ngIf="i !== 0">{{ i + 1 }}</span>
+            </td>
             <td class="team-cell">
               <div class="team-info">
                 <img 
@@ -40,13 +43,18 @@
             </td>
             <td class="wl">{{ roster.wins || 0 }}-{{ roster.losses || 0 }}</td>
             <td class="pct">{{ formatPercentage(calculatePercentage(roster.wins, roster.losses)) }}</td>
-            <td class="points">{{ roster.points || 0 | number:'1.2-2' }}</td>
+            <td class="points">{{ roster.points || 0 | number:'1.1-1' }}</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="actions">
+      <button *ngIf="isAdmin() && canCloseAndGenerate()" 
+              class="btn-generate" 
+              (click)="closeAndGenerateDuels()">
+        🔒 Close League & Generate Schedule
+      </button>
       <button class="btn-secondary" (click)="goBack()">Back</button>
     </div>
   </div>

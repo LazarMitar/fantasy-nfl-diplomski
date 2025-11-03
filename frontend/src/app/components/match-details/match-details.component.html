@@ -1,0 +1,110 @@
+<div class="match-details-container">
+  <div class="header">
+    <h1>Match Details - Week {{ duel?.gameweek?.weekNumber }}</h1>
+    <button class="back-btn" (click)="goBack()">← Back</button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading match details...</div>
+
+  <div class="match-content" *ngIf="!isLoading && duel">
+    <!-- Left Panel: My Team -->
+    <div class="players-panel left-panel">
+      <h2>{{ isHomeTeam() ? duel.homeRoster.name : duel.awayRoster.name }} <span class="you-badge">(You)</span></h2>
+      <div class="players-list">
+        <div 
+          *ngFor="let player of myRosterPlayers" 
+          class="player-card"
+          [ngStyle]="{'background-color': getTeamColor(player.player.team)}">
+          <img class="team-logo" [src]="getTeamLogo(player.player.team)" [alt]="player.player.team">
+          <div class="player-info">
+            <h3>{{ player.player.firstName }} {{ player.player.lastName }}</h3>
+            <p class="player-details">{{ player.player.team }} - {{ player.player.position }}</p>
+            <p class="player-price">${{ player.player.price }}M</p>
+            <div class="badges">
+              <span *ngIf="player.starter" class="starter-badge">STARTER</span>
+              <span *ngIf="!player.starter" class="bench-badge">BENCH</span>
+              <span *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</span>
+            </div>
+          </div>
+          <div class="player-points">
+            <span class="points-label">Points:</span>
+            <span class="points-value">{{ getPlayerPoints(player.player.id, player.captain).toFixed(1) }}</span>
+            <span *ngIf="player.captain" class="captain-multiplier">(×2)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Match Result -->
+    <div class="center-panel">
+      <div class="match-result">
+        <div class="score-display">
+          <div class="team-score-box my-score-box">
+            <span class="team-label">{{ isHomeTeam() ? duel.homeRoster.name : duel.awayRoster.name }}</span>
+            <span class="team-indicator">{{ isHomeTeam() ? '🏠' : '🏈' }}</span>
+            <span class="score">{{ getMyScore().toFixed(1) }}</span>
+          </div>
+          
+          <div class="vs-divider">
+            <span *ngIf="duel.status === DuelStatus.PENDING">VS</span>
+            <span *ngIf="duel.status === DuelStatus.IN_PROGRESS" class="live-badge">🔴 LIVE</span>
+            <span *ngIf="duel.status === DuelStatus.COMPLETED">-</span>
+          </div>
+          
+          <div class="team-score-box opponent-score-box">
+            <span class="team-label">{{ isHomeTeam() ? duel.awayRoster.name : duel.homeRoster.name }}</span>
+            <span class="team-indicator">{{ isHomeTeam() ? '🏈' : '🏠' }}</span>
+            <span class="score">{{ getOpponentScore().toFixed(1) }}</span>
+          </div>
+        </div>
+
+        <div class="match-status-box" *ngIf="duel.status === DuelStatus.COMPLETED">
+          <span *ngIf="getMyScore() > getOpponentScore()" class="status-won">
+            ✅ YOU WON!
+          </span>
+          <span *ngIf="getMyScore() < getOpponentScore()" class="status-lost">
+            ❌ YOU LOST
+          </span>
+          <span *ngIf="getMyScore() === getOpponentScore()" class="status-draw">
+            🤝 DRAW
+          </span>
+        </div>
+
+        <div class="match-info">
+          <p><strong>Gameweek:</strong> {{ duel.gameweek.weekNumber }}</p>
+          <p><strong>Season:</strong> {{ duel.gameweek.season }}</p>
+          <p><strong>Status:</strong> {{ duel.status }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Opponent Team -->
+    <div class="players-panel right-panel">
+      <h2>{{ isHomeTeam() ? duel.awayRoster.name : duel.homeRoster.name }}</h2>
+      <div class="players-list">
+        <div 
+          *ngFor="let player of opponentRosterPlayers" 
+          class="player-card"
+          [ngStyle]="{'background-color': getTeamColor(player.player.team)}">
+          <img class="team-logo" [src]="getTeamLogo(player.player.team)" [alt]="player.player.team">
+          <div class="player-info">
+            <h3>{{ player.player.firstName }} {{ player.player.lastName }}</h3>
+            <p class="player-details">{{ player.player.team }} - {{ player.player.position }}</p>
+            <p class="player-price">${{ player.player.price }}M</p>
+            <div class="badges">
+              <span *ngIf="player.starter" class="starter-badge">STARTER</span>
+              <span *ngIf="!player.starter" class="bench-badge">BENCH</span>
+              <span *ngIf="player.captain" class="captain-badge">⭐ CAPTAIN</span>
+            </div>
+          </div>
+          <div class="player-points">
+            <span class="points-label">Points:</span>
+            <span class="points-value">{{ getPlayerPoints(player.player.id, player.captain).toFixed(1) }}</span>
+            <span *ngIf="player.captain" class="captain-multiplier">(×2)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -14,5 +14,7 @@ public interface PlayerGameweekStatsRepository extends JpaRepository<PlayerGamew
            "WHERE s.gameweek.id = :gameweekId " +
            "GROUP BY s.player.team")
     List<Object[]> countStatsByTeamForGameweek(@Param("gameweekId") Long gameweekId);
+    
+    PlayerGameweekStats findByPlayerAndGameweek(Player player, Gameweek gameweek);
 }
 

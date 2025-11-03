@@ -113,6 +113,16 @@
   width: 60px;
 }
 
+.trophy {
+  font-size: 1.5em;
+  animation: shine 2s infinite;
+}
+
+@keyframes shine {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
 .team-cell {
   min-width: 200px;
 }
@@ -162,6 +172,25 @@
   border-top: 2px solid #e0e0e0;
   display: flex;
   justify-content: center;
+  gap: 15px;
+}
+
+.btn-generate {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-generate:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
 }
 
 .btn-secondary {

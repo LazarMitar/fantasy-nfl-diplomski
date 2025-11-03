@@ -61,6 +61,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/create-trade/create-trade.component').then(m => m.CreateTradeComponent)
   },
   {
+    path: 'roster/:rosterId/match/:duelId',
+    loadComponent: () => import('./components/match-details/match-details.component').then(m => m.MatchDetailsComponent)
+  },
+  {
     path: 'enter-stats',
     loadComponent: () => import('./components/enter-stats/enter-stats.component').then(m => m.EnterStatsComponent),
     canActivate: [adminGuard]
