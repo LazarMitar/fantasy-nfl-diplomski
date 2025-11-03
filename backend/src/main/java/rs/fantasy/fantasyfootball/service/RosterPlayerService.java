@@ -9,6 +9,7 @@ import rs.fantasy.fantasyfootball.model.RosterPlayer;
 import rs.fantasy.fantasyfootball.repository.PlayerRepository;
 import rs.fantasy.fantasyfootball.repository.RosterPlayerRepository;
 import rs.fantasy.fantasyfootball.repository.RosterRepository;
+import rs.fantasy.fantasyfootball.repository.TradeRepository;
 import rs.fantasy.fantasyfootball.service.RosterService;
 
 import java.util.ArrayList;
@@ -21,15 +22,21 @@ public class RosterPlayerService {
     private final RosterRepository rosterRepository;
     private final PlayerRepository playerRepository;
     private final RosterService rosterService;
+    private final GameweekService gameweekService;
+    private final TradeRepository tradeRepository;
 
     public RosterPlayerService(RosterPlayerRepository rosterPlayerRepository,
                                RosterRepository rosterRepository,
                                PlayerRepository playerRepository,
-                               RosterService rosterService) {
+                               RosterService rosterService,
+                               GameweekService gameweekService,
+                               TradeRepository tradeRepository) {
         this.rosterPlayerRepository = rosterPlayerRepository;
         this.rosterRepository = rosterRepository;
         this.playerRepository = playerRepository;
         this.rosterService = rosterService;
+        this.gameweekService = gameweekService;
+        this.tradeRepository = tradeRepository;
     }
 
     public List<RosterPlayer> getPlayersByRoster(Long rosterId) {
@@ -52,6 +59,15 @@ public class RosterPlayerService {
 
     @Transactional
     public RosterPlayer addPlayerToRoster(Long rosterId, Long playerId, boolean starter, boolean captain) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
+
+        // Check if gameweek is in progress
+        String season = roster.getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot add players while gameweek is in progress!");
+        }
+
         if(rosterPlayerRepository.countPlayersByRosterId(rosterId) >= 13) {
             throw new RuntimeException("Ne mozete imati preko 13 igraca u rosteru!");
         }
@@ -60,8 +76,6 @@ public class RosterPlayerService {
             throw new RuntimeException("Igrac je vec u rosteru!");
         }
 
-        Roster roster = rosterRepository.findById(rosterId)
-                .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new RuntimeException("Igrac nije pronadjen"));
 
@@ -139,12 +153,23 @@ public class RosterPlayerService {
         Roster roster = rosterRepository.findById(rosterId)
                 .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
 
+        // Check if gameweek is in progress
+        String season = roster.getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot remove players while gameweek is in progress!");
+        }
+
         List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
 
         RosterPlayer rp = rosterPlayers.stream()
                 .filter(r -> r.getPlayer().getId().equals(playerId))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Igrac nije pronadjen u rosteru"));
+
+        // Check if player has pending trades
+        if (tradeRepository.hasPendingTradeForRosterPlayer(rp.getId())) {
+            throw new RuntimeException("Cannot remove player with pending trades! Cancel or complete trades first.");
+        }
 
         Player player = rp.getPlayer();
         
@@ -156,6 +181,15 @@ public class RosterPlayerService {
 
     @Transactional
     public void setCaptain(Long rosterId, Long playerId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
+
+        // Check if gameweek is in progress
+        String season = roster.getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot change captain while gameweek is in progress!");
+        }
+
         List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
 
         rosterPlayers.forEach(rp -> {
@@ -176,6 +210,15 @@ public class RosterPlayerService {
 
     @Transactional
     public void removeCaptain(Long rosterId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
+
+        // Check if gameweek is in progress
+        String season = roster.getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot remove captain while gameweek is in progress!");
+        }
+
         List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
 
         rosterPlayers.forEach(rp -> {
@@ -188,6 +231,15 @@ public class RosterPlayerService {
 
     @Transactional
     public void swapStarterWithBench(Long rosterId, Long starterPlayerId, Long benchPlayerId) {
+        Roster roster = rosterRepository.findById(rosterId)
+                .orElseThrow(() -> new RuntimeException("Roster nije pronadjen"));
+
+        // Check if gameweek is in progress
+        String season = roster.getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot swap players while gameweek is in progress!");
+        }
+
         List<RosterPlayer> rosterPlayers = rosterPlayerRepository.findByRosterId(rosterId);
 
         RosterPlayer starter = rosterPlayers.stream()

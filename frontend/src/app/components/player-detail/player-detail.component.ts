@@ -6,7 +6,7 @@ import { PlayerService } from '../../services/player.service';
 import { InjuryService } from '../../services/injury.service';
 import { GameweekService } from '../../services/gameweek.service';
 import { StatsService } from '../../services/stats.service';
-import { Player } from '../../models/player.model';
+import { Player, Position } from '../../models/player.model';
 import { Injury, PlayerInjury, AssignInjuryRequest } from '../../models/injury.model';
 import { Gameweek } from '../../models/gameweek.model';
 import { PlayerGameweekStats } from '../../models/stats.model';
@@ -26,11 +26,22 @@ export class PlayerDetailComponent implements OnInit {
   gameweekStats: Map<number, PlayerGameweekStats> = new Map();
   isLoading = false;
   showInjuryModal = false;
+  showEditModal = false;
   
   injuryForm: AssignInjuryRequest = {
     injuryId: 0,
     estimatedRecoveryWeeks: 0,
     injuryDate: ''
+  };
+
+  editForm: Player = {
+    id: 0,
+    firstName: '',
+    lastName: '',
+    position: Position.QB,
+    team: '',
+    jerseyNumber: 0,
+    price: 0
   };
 
   teamColors: { [key: string]: string } = {
@@ -212,6 +223,40 @@ export class PlayerDetailComponent implements OnInit {
       
       // Check if current date is within injury period
       return today >= injuryDate && today <= recoveryEndDate;
+    });
+  }
+
+  isAdmin(): boolean {
+    return localStorage.getItem('role') === 'ADMIN';
+  }
+
+  openEditModal() {
+    if (this.player) {
+      this.editForm = { ...this.player };
+      this.showEditModal = true;
+    }
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+  }
+
+  submitEdit() {
+    if (!this.editForm.firstName || !this.editForm.lastName || !this.editForm.team || !this.editForm.price) {
+      alert('Please fill all required fields');
+      return;
+    }
+
+    this.playerService.updatePlayer(this.editForm.id, this.editForm).subscribe({
+      next: (updatedPlayer) => {
+        this.player = updatedPlayer;
+        this.closeEditModal();
+        alert('Player updated successfully!');
+      },
+      error: (error) => {
+        alert('Error updating player. Please try again.');
+        console.error(error);
+      }
     });
   }
 }

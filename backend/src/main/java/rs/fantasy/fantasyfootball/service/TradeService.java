@@ -20,14 +20,22 @@ public class TradeService {
     private final TradeRepository tradeRepository;
     private final RosterPlayerRepository rosterPlayerRepository;
     private final RosterRepository rosterRepository;
+    private final GameweekService gameweekService;
 
-    public TradeService(TradeRepository tradeRepository, RosterPlayerRepository rosterPlayerRepository, RosterRepository rosterRepository) {
+    public TradeService(TradeRepository tradeRepository, RosterPlayerRepository rosterPlayerRepository, RosterRepository rosterRepository, GameweekService gameweekService) {
         this.tradeRepository = tradeRepository;
         this.rosterPlayerRepository = rosterPlayerRepository;
         this.rosterRepository = rosterRepository;
+        this.gameweekService = gameweekService;
     }
 
     public Trade createTrade(RosterPlayer initiator, RosterPlayer receiver) {
+        // Check if gameweek is in progress
+        String season = initiator.getRoster().getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot create trades while gameweek is in progress!");
+        }
+
         if(initiator.getRoster().getLeague() != receiver.getRoster().getLeague()){
             throw new IllegalArgumentException("Trade partners must be from same league");
         }
@@ -54,6 +62,12 @@ public class TradeService {
     public Trade acceptTrade(Long tradeId) {
         Trade trade = tradeRepository.findById(tradeId)
                 .orElseThrow(() -> new RuntimeException("Trade not found"));
+
+        // Check if gameweek is in progress
+        String season = trade.getInitiatorRosterPlayer().getRoster().getLeague().getSeason();
+        if (gameweekService.isGameweekInProgress(season)) {
+            throw new RuntimeException("Cannot accept trades while gameweek is in progress!");
+        }
 
         if (trade.getStatus() != TradeStatus.PENDING) {
             throw new RuntimeException("Trade already executed or cancelled");
