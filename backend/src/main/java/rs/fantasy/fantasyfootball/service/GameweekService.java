@@ -115,7 +115,7 @@ public class GameweekService {
             duelRepository.save(duel);
         }
         
-        // 3. Završi gameweek
+        // 3. Završi gameweek (predikcije su već evaluirane meč po meč)
         gameweek.setStatus(GameweekStatus.FINISHED);
         return gameweekRepository.save(gameweek);
     }

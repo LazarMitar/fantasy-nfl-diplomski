@@ -1,0 +1,78 @@
+<div class="manage-matches-container">
+  <div class="header">
+    <div class="header-spacer"></div>
+    <h1>Manage Real Matches</h1>
+    <div class="header-buttons">
+      <button class="action-btn" (click)="goToEnterStats()">Enter Stats</button>
+      <button class="back-btn" (click)="goBack()">← Back</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading...</div>
+
+  <div *ngIf="!isLoading && !currentGameweek" class="no-gameweek">
+    <p>No gameweek is currently in progress</p>
+  </div>
+
+  <div *ngIf="!isLoading && currentGameweek" class="content">
+    <div class="gameweek-info">
+      <h2>Gameweek {{ currentGameweek.weekNumber }} - {{ currentGameweek.status }}</h2>
+      <p>Season: {{ currentGameweek.season }}</p>
+    </div>
+
+    <div class="matches-grid">
+      <div *ngFor="let match of realMatches" class="match-card">
+        <div class="match-header">
+          <div class="team">
+            <img [src]="getTeamLogo(match.homeTeamName)" [alt]="match.homeTeamName" class="team-logo">
+            <span class="team-name">{{ match.homeTeamName }}</span>
+          </div>
+          <span class="vs">VS</span>
+          <div class="team">
+            <img [src]="getTeamLogo(match.awayTeamName)" [alt]="match.awayTeamName" class="team-logo">
+            <span class="team-name">{{ match.awayTeamName }}</span>
+          </div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-inputs">
+            <div class="input-group">
+              <label>Home Score</label>
+              <input 
+                type="number" 
+                min="0"
+                [ngModel]="getHomePoints(match.id)"
+                (ngModelChange)="setHomePoints(match.id, $event)"
+                (focus)="initializeResult(match.id)"
+                placeholder="0">
+            </div>
+
+            <div class="input-group">
+              <label>Away Score</label>
+              <input 
+                type="number" 
+                min="0"
+                [ngModel]="getAwayPoints(match.id)"
+                (ngModelChange)="setAwayPoints(match.id, $event)"
+                (focus)="initializeResult(match.id)"
+                placeholder="0">
+            </div>
+          </div>
+
+          <button class="save-btn" (click)="saveResult(match)">
+            Save Result
+          </button>
+
+          <div *ngIf="match.winnerTeam" class="winner-display">
+            Winner: <strong>{{ match.winnerTeam }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="realMatches.length === 0" class="no-matches">
+        No matches for this gameweek
+      </div>
+    </div>
+  </div>
+</div>
+

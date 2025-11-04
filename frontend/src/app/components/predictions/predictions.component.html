@@ -1,0 +1,106 @@
+<div class="predictions-container">
+  <div class="header">
+    <div class="header-spacer"></div>
+    <h1>My Predictions</h1>
+    <div class="header-buttons">
+      <button class="back-btn" (click)="goBack()">← Back</button>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading">Loading predictions...</div>
+
+  <div *ngIf="!isLoading && currentGameweek" class="content">
+    <!-- Gameweek Navigation -->
+    <div class="gameweek-navigation">
+      <button class="nav-btn" (click)="previousGameweek()" [disabled]="currentGameweekIndex === 0">
+        ◀
+      </button>
+      <div class="gameweek-info-header">
+        <h2>Week {{ currentGameweek.weekNumber }}</h2>
+        <span class="gameweek-status" 
+              [class.in-progress]="currentGameweek.status === 'IN_PROGRESS'" 
+              [class.finished]="currentGameweek.status === 'FINISHED'">
+          {{ currentGameweek.status }}
+        </span>
+        <div class="gameweek-score">
+          Score: {{ getCorrectPredictionsCount() }} / {{ getCurrentMatches().length }}
+        </div>
+      </div>
+      <button class="nav-btn" (click)="nextGameweek()" [disabled]="currentGameweekIndex === gameweeks.length - 1">
+        ▶
+      </button>
+    </div>
+
+    <!-- Matches Grid -->
+    <div class="matches-container">
+      <div class="matches-grid">
+        <div *ngFor="let match of getCurrentMatches()" class="match-card">
+          <div class="match-teams">
+            <div class="team home-team">
+              <img [src]="getTeamLogo(match.homeTeamName)" [alt]="match.homeTeamName" class="team-logo">
+              <span class="team-name">{{ match.homeTeamName }}</span>
+              <span *ngIf="match.homeTeamPoints !== null" class="team-score">{{ match.homeTeamPoints }}</span>
+            </div>
+
+            <div class="vs-divider">
+              <span *ngIf="match.winnerTeam === null">VS</span>
+              <span *ngIf="match.winnerTeam !== null">-</span>
+            </div>
+
+            <div class="team away-team">
+              <img [src]="getTeamLogo(match.awayTeamName)" [alt]="match.awayTeamName" class="team-logo">
+              <span class="team-name">{{ match.awayTeamName }}</span>
+              <span *ngIf="match.awayTeamPoints !== null" class="team-score">{{ match.awayTeamPoints }}</span>
+            </div>
+          </div>
+
+          <!-- Prediction Section -->
+          <div class="prediction-section" *ngIf="getPredictionForMatch(match.id) as prediction; else noPrediction">
+            <div class="prediction-status">
+              <span *ngIf="prediction.status === PredictionStatus.PENDING" class="status-badge pending">
+                📅 Predicted: {{ prediction.predictedWinner }}
+              </span>
+              <span *ngIf="prediction.status === PredictionStatus.CORRECT" class="status-badge correct">
+                ✅ CORRECT - {{ prediction.predictedWinner }}
+              </span>
+              <span *ngIf="prediction.status === PredictionStatus.FALSE" class="status-badge false">
+                ❌ WRONG - Predicted: {{ prediction.predictedWinner }}
+              </span>
+            </div>
+
+            <div *ngIf="canPredict(currentGameweek!)" class="prediction-actions">
+              <button class="predict-btn" (click)="makePrediction(match, match.homeTeamName)">
+                Change to {{ match.homeTeamName }}
+              </button>
+              <button class="predict-btn" (click)="makePrediction(match, match.awayTeamName)">
+                Change to {{ match.awayTeamName }}
+              </button>
+            </div>
+          </div>
+
+          <ng-template #noPrediction>
+            <div class="prediction-section" *ngIf="canPredict(currentGameweek!)">
+              <p class="no-prediction">Make your prediction:</p>
+              <div class="prediction-actions">
+                <button class="predict-btn home" (click)="makePrediction(match, match.homeTeamName)">
+                  {{ match.homeTeamName }}
+                </button>
+                <button class="predict-btn away" (click)="makePrediction(match, match.awayTeamName)">
+                  {{ match.awayTeamName }}
+                </button>
+              </div>
+            </div>
+            <div *ngIf="!canPredict(currentGameweek!)" class="no-prediction-msg">
+              No prediction made
+            </div>
+          </ng-template>
+        </div>
+
+        <div *ngIf="getCurrentMatches().length === 0" class="no-matches">
+          No matches for this gameweek
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
