@@ -1,32 +1,32 @@
 <div class="home-container">
   <div class="header">
-    <h1>Dobrodosli u NFL Fantasy League!</h1>
-    <button class="logout-btn" (click)="logout()">Odjavi se</button>
+    <h1>Welcome to NFL Fantasy!</h1>
+    <button class="logout-btn" (click)="logout()">Log out</button>
   </div>
   
   <div class="content">
-    <p>Uspesno ste prijavljeni!</p>
+    <p>Successfully logined!</p>
     
     <!-- Moji Rosters -->
     <div class="rosters-section">
-      <h2>Moji Timovi</h2>
+      <h2>My rosters</h2>
       
-      <div *ngIf="loading" class="loading">Učitavanje...</div>
+      <div *ngIf="loading" class="loading">Loading...</div>
       <div *ngIf="error" class="error">{{ error }}</div>
       
       <div *ngIf="!loading && !error" class="rosters-grid">
         <div *ngIf="rosters.length === 0" class="no-rosters">
-          Nemate kreiranih timova
+          You don't have any roster
         </div>
         
         <div *ngFor="let roster of rosters" class="roster-card" (click)="goToRosterDetails(roster.id!)" style="cursor: pointer;">
           <h3>{{ roster.name }}</h3>
           <div class="roster-details">
-            <p><strong>Liga:</strong> {{ roster.league?.name }}</p>
-            <p><strong>Pobede:</strong> {{ roster.wins }}</p>
-            <p><strong>Porazi:</strong> {{ roster.losses }}</p>
-            <p><strong>Poeni:</strong> {{ roster.points }}</p>
-            <p><strong>Budžet:</strong> ${{ roster.budget?.toFixed(2) }}</p>
+            <p><strong>League:</strong> {{ roster.league?.name }}</p>
+            <p><strong>Wins:</strong> {{ roster.wins }}</p>
+            <p><strong>Losses:</strong> {{ roster.losses }}</p>
+            <p><strong>Total Points:</strong> {{ roster.points }}</p>
+            <p><strong>Budget:</strong> ${{ roster.budget?.toFixed(2) }}</p>
           </div>
         </div>
       </div>
@@ -38,9 +38,12 @@
       <button class="nav-btn" (click)="goToCreateLeague()">Create League</button>
       <button class="nav-btn" (click)="goToMyLeagues()">My Leagues</button>
       <button class="nav-btn stats-btn" (click)="goToEnterStats()">📊 Enter Stats</button>
+      <button class="nav-btn matches-btn" (click)="goToManageRealMatches()">⚽ Real Matches</button>
+      <button class="nav-btn predictions-btn" (click)="goToPredictions()">🔮 My Predictions</button>
     </div>
     <div *ngIf="!isAdmin" class="user-actions">
       <button class="nav-btn" (click)="goToAvailableLeagues()">Available Leagues</button>
+      <button class="nav-btn predictions-btn" (click)="goToPredictions()">🔮 My Predictions</button>
     </div>
   </div>
 </div>

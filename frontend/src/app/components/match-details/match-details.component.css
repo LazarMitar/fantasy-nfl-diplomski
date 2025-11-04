@@ -20,12 +20,22 @@
   align-items: center;
 }
 
+.header-spacer {
+  flex: 1;
+}
+
 .header h1 {
   font-size: 42px;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   color: white;
+}
+
+.header-buttons {
   flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .back-btn {

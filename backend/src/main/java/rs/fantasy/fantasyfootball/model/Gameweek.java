@@ -1,11 +1,13 @@
 package rs.fantasy.fantasyfootball.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import rs.fantasy.fantasyfootball.model.GameweekStatus;
 
 @Entity
 @Table(name = "gameweeks")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Gameweek {
 
     @Id

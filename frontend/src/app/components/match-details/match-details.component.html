@@ -1,7 +1,10 @@
 <div class="match-details-container">
   <div class="header">
+    <div class="header-spacer"></div>
     <h1>Match Details - Week {{ duel?.gameweek?.weekNumber }}</h1>
-    <button class="back-btn" (click)="goBack()">← Back</button>
+    <div class="header-buttons">
+      <button class="back-btn" (click)="goBack()">← Back</button>
+    </div>
   </div>
 
   <div *ngIf="isLoading" class="loading">Loading match details...</div>

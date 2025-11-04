@@ -75,4 +75,12 @@ export class HomeComponent implements OnInit {
   goToEnterStats() {
     this.router.navigate(['/enter-stats']);
   }
+
+  goToPredictions() {
+    this.router.navigate(['/predictions']);
+  }
+
+  goToManageRealMatches() {
+    this.router.navigate(['/manage-real-matches']);
+  }
 }

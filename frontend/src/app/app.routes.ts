@@ -65,6 +65,15 @@ export const routes: Routes = [
     loadComponent: () => import('./components/match-details/match-details.component').then(m => m.MatchDetailsComponent)
   },
   {
+    path: 'predictions',
+    loadComponent: () => import('./components/predictions/predictions.component').then(m => m.PredictionsComponent)
+  },
+  {
+    path: 'manage-real-matches',
+    loadComponent: () => import('./components/manage-real-matches/manage-real-matches.component').then(m => m.ManageRealMatchesComponent),
+    canActivate: [adminGuard]
+  },
+  {
     path: 'enter-stats',
     loadComponent: () => import('./components/enter-stats/enter-stats.component').then(m => m.EnterStatsComponent),
     canActivate: [adminGuard]

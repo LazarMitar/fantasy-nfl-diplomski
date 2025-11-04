@@ -6,10 +6,12 @@ import rs.fantasy.fantasyfootball.repository.InjuryRepository;
 import rs.fantasy.fantasyfootball.repository.PlayerRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import rs.fantasy.fantasyfootball.repository.RealMatchRepository;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -17,12 +19,14 @@ public class DataSeeder implements CommandLineRunner {
     private final PlayerRepository playerRepository;
     private final InjuryRepository injuryRepository;
     private final GameweekRepository gameweekRepository;
+    private final RealMatchRepository realMatchRepository;
 
 
-    public DataSeeder(PlayerRepository playerRepository, InjuryRepository injuryRepository, GameweekRepository  gameweekRepository) {
+    public DataSeeder(PlayerRepository playerRepository, InjuryRepository injuryRepository, GameweekRepository  gameweekRepository, RealMatchRepository realMatchRepository) {
         this.playerRepository = playerRepository;
         this.injuryRepository = injuryRepository;
         this.gameweekRepository = gameweekRepository;
+        this.realMatchRepository = realMatchRepository;
     }
 
     @Override
@@ -342,6 +346,356 @@ public class DataSeeder implements CommandLineRunner {
         {
             System.out.println("ℹ️ DataSeeder: Gameweeks already exist, skipping seeding.");
 
-        }    }
+        }
+        if (realMatchRepository.count() == 0) {
+            Gameweek week1 = gameweekRepository.findByGameweekId(1L);
+            if(week1.getId() != null){
+                realMatchRepository.save(new RealMatch("DAL", "PHI", week1));
+                realMatchRepository.save(new RealMatch("KC", "LAC", week1));
+                realMatchRepository.save(new RealMatch("LV", "NE", week1));
+                realMatchRepository.save(new RealMatch("PIT", "NYJ", week1));
+                realMatchRepository.save(new RealMatch("MIA", "IND", week1));
+                realMatchRepository.save(new RealMatch("ARI", "NO", week1));
+                realMatchRepository.save(new RealMatch("NYG", "WAS", week1));
+                realMatchRepository.save(new RealMatch("CAR", "JAX", week1));
+                realMatchRepository.save(new RealMatch("CIN", "CLE", week1));
+                realMatchRepository.save(new RealMatch("TB", "ATL", week1));
+                realMatchRepository.save(new RealMatch("TEN", "DEN", week1));
+                realMatchRepository.save(new RealMatch("SF", "SEA", week1));
+                realMatchRepository.save(new RealMatch("DET", "GB", week1));
+                realMatchRepository.save(new RealMatch("HOU", "LAR", week1));
+                realMatchRepository.save(new RealMatch("BAL", "BUF", week1));
+                realMatchRepository.save(new RealMatch("MIN", "CHI", week1));
+            }
+
+            Gameweek week2 = gameweekRepository.findByGameweekId(2L);
+            if(week2.getId() != null){
+                realMatchRepository.save(new RealMatch("WAS", "GB", week2));
+                realMatchRepository.save(new RealMatch("JAX", "CIN", week2));
+                realMatchRepository.save(new RealMatch("BUF", "NYJ", week2));
+                realMatchRepository.save(new RealMatch("NE", "MIA", week2));
+                realMatchRepository.save(new RealMatch("LAR", "TEN", week2));
+                realMatchRepository.save(new RealMatch("CLE", "BAL", week2));
+                realMatchRepository.save(new RealMatch("SF", "NO", week2));
+                realMatchRepository.save(new RealMatch("NYG", "DAL", week2));
+                realMatchRepository.save(new RealMatch("SEA", "PIT", week2));
+                realMatchRepository.save(new RealMatch("CHI", "DET", week2));
+                realMatchRepository.save(new RealMatch("DEN", "IND", week2));
+                realMatchRepository.save(new RealMatch("CAR", "ARI", week2));
+                realMatchRepository.save(new RealMatch("PHI", "KC", week2));
+                realMatchRepository.save(new RealMatch("ATL", "MIN", week2));
+                realMatchRepository.save(new RealMatch("TB", "HOU", week2));
+                realMatchRepository.save(new RealMatch("LAC", "LV", week2));
+            }
+
+            Gameweek week3 = gameweekRepository.findByGameweekId(3L);
+            if(week3.getId() != null){
+                realMatchRepository.save(new RealMatch("MIA", "BUF", week3));
+                realMatchRepository.save(new RealMatch("PIT", "NE", week3));
+                realMatchRepository.save(new RealMatch("HOU", "JAX", week3));
+                realMatchRepository.save(new RealMatch("IND", "TEN", week3));
+                realMatchRepository.save(new RealMatch("CIN", "MIN", week3));
+                realMatchRepository.save(new RealMatch("NYJ", "TB", week3));
+                realMatchRepository.save(new RealMatch("GB", "CLE", week3));
+                realMatchRepository.save(new RealMatch("LV", "WAS", week3));
+                realMatchRepository.save(new RealMatch("ATL", "CAR", week3));
+                realMatchRepository.save(new RealMatch("LAR", "PHI", week3));
+                realMatchRepository.save(new RealMatch("NO", "SEA", week3));
+                realMatchRepository.save(new RealMatch("DEN", "LAC", week3));
+                realMatchRepository.save(new RealMatch("DAL", "CHI", week3));
+                realMatchRepository.save(new RealMatch("ARI", "SF", week3));
+                realMatchRepository.save(new RealMatch("KC", "NYG", week3));
+                realMatchRepository.save(new RealMatch("DET", "BAL", week3));
+            }
+
+            Gameweek week4 = gameweekRepository.findByGameweekId(4L);
+            if(week4.getId() != null){
+                realMatchRepository.save(new RealMatch("SEA", "ARI", week4));
+                realMatchRepository.save(new RealMatch("MIN", "PIT", week4)); // Dublin
+                realMatchRepository.save(new RealMatch("NO", "BUF", week4));
+                realMatchRepository.save(new RealMatch("WAS", "ATL", week4));
+                realMatchRepository.save(new RealMatch("LAC", "NYG", week4));
+                realMatchRepository.save(new RealMatch("TEN", "HOU", week4));
+                realMatchRepository.save(new RealMatch("CLE", "DET", week4));
+                realMatchRepository.save(new RealMatch("CAR", "NE", week4));
+                realMatchRepository.save(new RealMatch("PHI", "TB", week4));
+                realMatchRepository.save(new RealMatch("JAX", "SF", week4));
+                realMatchRepository.save(new RealMatch("IND", "LAR", week4));
+                realMatchRepository.save(new RealMatch("BAL", "KC", week4));
+                realMatchRepository.save(new RealMatch("CHI", "LV", week4));
+                realMatchRepository.save(new RealMatch("GB", "DAL", week4));
+                realMatchRepository.save(new RealMatch("NYJ", "MIA", week4));
+                realMatchRepository.save(new RealMatch("CIN", "DEN", week4));
+            }
+
+            Gameweek week5 = gameweekRepository.findByGameweekId(5L);
+            if(week5.getId() != null){
+                realMatchRepository.save(new RealMatch("SF", "LAR", week5));
+                realMatchRepository.save(new RealMatch("MIN", "CLE", week5)); // Tottenham
+                realMatchRepository.save(new RealMatch("NYG", "NO", week5));
+                realMatchRepository.save(new RealMatch("DEN", "PHI", week5));
+                realMatchRepository.save(new RealMatch("HOU", "BAL", week5));
+                realMatchRepository.save(new RealMatch("DAL", "NYJ", week5));
+                realMatchRepository.save(new RealMatch("LV", "IND", week5));
+                realMatchRepository.save(new RealMatch("MIA", "CAR", week5));
+                realMatchRepository.save(new RealMatch("TEN", "ARI", week5));
+                realMatchRepository.save(new RealMatch("TB", "SEA", week5));
+                realMatchRepository.save(new RealMatch("WAS", "LAC", week5));
+                realMatchRepository.save(new RealMatch("DET", "CIN", week5));
+                realMatchRepository.save(new RealMatch("NE", "BUF", week5));
+                realMatchRepository.save(new RealMatch("KC", "JAX", week5));
+            }
+
+            Gameweek week6 = gameweekRepository.findByGameweekId(6L);
+            if(week6.getId() != null){
+                realMatchRepository.save(new RealMatch("PHI", "NYG", week6));
+                realMatchRepository.save(new RealMatch("DEN", "NYJ", week6)); // Tottenham
+                realMatchRepository.save(new RealMatch("CLE", "PIT", week6));
+                realMatchRepository.save(new RealMatch("LAC", "MIA", week6));
+                realMatchRepository.save(new RealMatch("SF", "TB", week6));
+                realMatchRepository.save(new RealMatch("SEA", "JAX", week6));
+                realMatchRepository.save(new RealMatch("DAL", "CAR", week6));
+                realMatchRepository.save(new RealMatch("LAR", "BAL", week6));
+                realMatchRepository.save(new RealMatch("ARI", "IND", week6));
+                realMatchRepository.save(new RealMatch("TEN", "LV", week6));
+                realMatchRepository.save(new RealMatch("CIN", "GB", week6));
+                realMatchRepository.save(new RealMatch("NE", "NO", week6));
+                realMatchRepository.save(new RealMatch("DET", "KC", week6));
+                realMatchRepository.save(new RealMatch("CHI", "WAS", week6));
+                realMatchRepository.save(new RealMatch("BUF", "ATL", week6));
+            }
+
+            Gameweek week7 = gameweekRepository.findByGameweekId(7L);
+            if(week7.getId() != null){
+                realMatchRepository.save(new RealMatch("PIT", "CIN", week7));
+                realMatchRepository.save(new RealMatch("LAR", "JAX", week7)); // Wembley
+                realMatchRepository.save(new RealMatch("NE", "TEN", week7));
+                realMatchRepository.save(new RealMatch("MIA", "CLE", week7));
+                realMatchRepository.save(new RealMatch("LV", "KC", week7));
+                realMatchRepository.save(new RealMatch("CAR", "NYJ", week7));
+                realMatchRepository.save(new RealMatch("NO", "CHI", week7));
+                realMatchRepository.save(new RealMatch("PHI", "MIN", week7));
+                realMatchRepository.save(new RealMatch("NYG", "DEN", week7));
+                realMatchRepository.save(new RealMatch("IND", "LAC", week7));
+                realMatchRepository.save(new RealMatch("WAS", "DAL", week7));
+                realMatchRepository.save(new RealMatch("GB", "ARI", week7));
+                realMatchRepository.save(new RealMatch("ATL", "SF", week7));
+                realMatchRepository.save(new RealMatch("TB", "DET", week7));
+                realMatchRepository.save(new RealMatch("HOU", "SEA", week7));
+            }
+
+            Gameweek week8 = gameweekRepository.findByGameweekId(8L);
+            if(week8.getId() != null){
+                realMatchRepository.save(new RealMatch("MIN", "LAC", week8));
+                realMatchRepository.save(new RealMatch("NYJ", "CIN", week8));
+                realMatchRepository.save(new RealMatch("CHI", "BAL", week8));
+                realMatchRepository.save(new RealMatch("MIA", "ATL", week8));
+                realMatchRepository.save(new RealMatch("CLE", "NE", week8));
+                realMatchRepository.save(new RealMatch("NYG", "PHI", week8));
+                realMatchRepository.save(new RealMatch("BUF", "CAR", week8));
+                realMatchRepository.save(new RealMatch("SF", "HOU", week8));
+                realMatchRepository.save(new RealMatch("TB", "NO", week8));
+                realMatchRepository.save(new RealMatch("DAL", "DEN", week8));
+                realMatchRepository.save(new RealMatch("TEN", "IND", week8));
+                realMatchRepository.save(new RealMatch("GB", "PIT", week8));
+                realMatchRepository.save(new RealMatch("WAS", "KC", week8));
+            }
+
+            Gameweek week9 = gameweekRepository.findByGameweekId(9L);
+            if(week9.getId() != null){
+                realMatchRepository.save(new RealMatch("BAL", "MIA", week9));
+                realMatchRepository.save(new RealMatch("IND", "PIT", week9));
+                realMatchRepository.save(new RealMatch("ATL", "NE", week9));
+                realMatchRepository.save(new RealMatch("CHI", "CIN", week9));
+                realMatchRepository.save(new RealMatch("LAC", "TEN", week9));
+                realMatchRepository.save(new RealMatch("SF", "NYG", week9));
+                realMatchRepository.save(new RealMatch("CAR", "GB", week9));
+                realMatchRepository.save(new RealMatch("DEN", "HOU", week9));
+                realMatchRepository.save(new RealMatch("MIN", "DET", week9));
+                realMatchRepository.save(new RealMatch("JAX", "LV", week9));
+                realMatchRepository.save(new RealMatch("NO", "LAR", week9));
+                realMatchRepository.save(new RealMatch("KC", "BUF", week9));
+                realMatchRepository.save(new RealMatch("SEA", "WAS", week9));
+                realMatchRepository.save(new RealMatch("ARI", "DAL", week9));
+            }
+
+            Gameweek week10 = gameweekRepository.findByGameweekId(10L);
+            if(week10.getId() != null){
+                realMatchRepository.save(new RealMatch("LV", "DEN", week10));
+                realMatchRepository.save(new RealMatch("ATL", "IND", week10)); // Berlin
+                realMatchRepository.save(new RealMatch("JAX", "HOU", week10));
+                realMatchRepository.save(new RealMatch("BUF", "MIA", week10));
+                realMatchRepository.save(new RealMatch("NE", "TB", week10));
+                realMatchRepository.save(new RealMatch("CLE", "NYJ", week10));
+                realMatchRepository.save(new RealMatch("NYG", "CHI", week10));
+                realMatchRepository.save(new RealMatch("NO", "CAR", week10));
+                realMatchRepository.save(new RealMatch("BAL", "MIN", week10));
+                realMatchRepository.save(new RealMatch("ARI", "SEA", week10));
+                realMatchRepository.save(new RealMatch("LAR", "SF", week10));
+                realMatchRepository.save(new RealMatch("DET", "WAS", week10));
+                realMatchRepository.save(new RealMatch("PIT", "LAC", week10));
+                realMatchRepository.save(new RealMatch("PHI", "GB", week10));
+            }
+
+            Gameweek week11 = gameweekRepository.findByGameweekId(11L);
+            if(week11.getId() != null){
+                realMatchRepository.save(new RealMatch("NYJ", "NE", week11));
+                realMatchRepository.save(new RealMatch("WAS", "MIA", week11)); // Madrid
+                realMatchRepository.save(new RealMatch("TB", "BUF", week11));
+                realMatchRepository.save(new RealMatch("LAC", "JAX", week11));
+                realMatchRepository.save(new RealMatch("CIN", "PIT", week11));
+                realMatchRepository.save(new RealMatch("CAR", "ATL", week11));
+                realMatchRepository.save(new RealMatch("GB", "NYG", week11));
+                realMatchRepository.save(new RealMatch("CHI", "MIN", week11));
+                realMatchRepository.save(new RealMatch("HOU", "TEN", week11));
+                realMatchRepository.save(new RealMatch("SF", "ARI", week11));
+                realMatchRepository.save(new RealMatch("SEA", "LAR", week11));
+                realMatchRepository.save(new RealMatch("KC", "DEN", week11));
+                realMatchRepository.save(new RealMatch("BAL", "CLE", week11));
+                realMatchRepository.save(new RealMatch("DET", "PHI", week11));
+                realMatchRepository.save(new RealMatch("DAL", "LV", week11));
+            }
+
+            Gameweek week12 = gameweekRepository.findByGameweekId(12L);
+            if(week12.getId() != null){
+                realMatchRepository.save(new RealMatch("BUF", "HOU", week12));
+                realMatchRepository.save(new RealMatch("NE", "CIN", week12));
+                realMatchRepository.save(new RealMatch("PIT", "CHI", week12));
+                realMatchRepository.save(new RealMatch("IND", "KC", week12));
+                realMatchRepository.save(new RealMatch("NYJ", "BAL", week12));
+                realMatchRepository.save(new RealMatch("NYG", "DET", week12));
+                realMatchRepository.save(new RealMatch("SEA", "TEN", week12));
+                realMatchRepository.save(new RealMatch("MIN", "GB", week12));
+                realMatchRepository.save(new RealMatch("CLE", "LV", week12));
+                realMatchRepository.save(new RealMatch("JAX", "ARI", week12));
+                realMatchRepository.save(new RealMatch("ATL", "NO", week12));
+                realMatchRepository.save(new RealMatch("PHI", "DAL", week12));
+                realMatchRepository.save(new RealMatch("TB", "LAR", week12));
+                realMatchRepository.save(new RealMatch("CAR", "SF", week12));
+            }
+
+            Gameweek week13 = gameweekRepository.findByGameweekId(13L);
+            if(week13.getId() != null){
+                realMatchRepository.save(new RealMatch("GB", "DET", week13));
+                realMatchRepository.save(new RealMatch("KC", "DAL", week13));
+                realMatchRepository.save(new RealMatch("CIN", "BAL", week13));
+                realMatchRepository.save(new RealMatch("CHI", "PHI", week13));
+                realMatchRepository.save(new RealMatch("SF", "CLE", week13));
+                realMatchRepository.save(new RealMatch("JAX", "TEN", week13));
+                realMatchRepository.save(new RealMatch("HOU", "IND", week13));
+                realMatchRepository.save(new RealMatch("ARI", "TB", week13));
+                realMatchRepository.save(new RealMatch("NO", "MIA", week13));
+                realMatchRepository.save(new RealMatch("ATL", "NYJ", week13));
+                realMatchRepository.save(new RealMatch("LAR", "CAR", week13));
+                realMatchRepository.save(new RealMatch("MIN", "SEA", week13));
+                realMatchRepository.save(new RealMatch("BUF", "PIT", week13));
+                realMatchRepository.save(new RealMatch("LV", "LAC", week13));
+                realMatchRepository.save(new RealMatch("DEN", "WAS", week13));
+                realMatchRepository.save(new RealMatch("NYG", "NE", week13));
+            }
+
+            Gameweek week14 = gameweekRepository.findByGameweekId(14L);
+            if(week14.getId() != null){
+                realMatchRepository.save(new RealMatch("DAL", "DET", week14));
+                realMatchRepository.save(new RealMatch("IND", "JAX", week14));
+                realMatchRepository.save(new RealMatch("NO", "TB", week14));
+                realMatchRepository.save(new RealMatch("MIA", "NYJ", week14));
+                realMatchRepository.save(new RealMatch("PIT", "BAL", week14));
+                realMatchRepository.save(new RealMatch("SEA", "ATL", week14));
+                realMatchRepository.save(new RealMatch("TEN", "CLE", week14));
+                realMatchRepository.save(new RealMatch("WAS", "MIN", week14));
+                realMatchRepository.save(new RealMatch("CHI", "GB", week14));
+                realMatchRepository.save(new RealMatch("DEN", "LV", week14));
+                realMatchRepository.save(new RealMatch("LAR", "ARI", week14));
+                realMatchRepository.save(new RealMatch("CIN", "BUF", week14));
+                realMatchRepository.save(new RealMatch("HOU", "KC", week14));
+                realMatchRepository.save(new RealMatch("PHI", "LAC", week14));
+            }
+
+            Gameweek week15 = gameweekRepository.findByGameweekId(15L);
+            if(week15.getId() != null){
+                realMatchRepository.save(new RealMatch("ATL", "TB", week15));
+                realMatchRepository.save(new RealMatch("LAC", "KC", week15));
+                realMatchRepository.save(new RealMatch("BUF", "NE", week15));
+                realMatchRepository.save(new RealMatch("NYJ", "JAX", week15));
+                realMatchRepository.save(new RealMatch("BAL", "CIN", week15));
+                realMatchRepository.save(new RealMatch("LV", "PHI", week15));
+                realMatchRepository.save(new RealMatch("ARI", "HOU", week15));
+                realMatchRepository.save(new RealMatch("WAS", "NYG", week15));
+                realMatchRepository.save(new RealMatch("CLE", "CHI", week15));
+                realMatchRepository.save(new RealMatch("DET", "LAR", week15));
+                realMatchRepository.save(new RealMatch("TEN", "SF", week15));
+                realMatchRepository.save(new RealMatch("CAR", "NO", week15));
+                realMatchRepository.save(new RealMatch("GB", "DEN", week15));
+                realMatchRepository.save(new RealMatch("IND", "SEA", week15));
+                realMatchRepository.save(new RealMatch("MIN", "DAL", week15));
+                realMatchRepository.save(new RealMatch("MIA", "PIT", week15));
+            }
+
+            Gameweek week16 = gameweekRepository.findByGameweekId(16L);
+            if(week16.getId() != null){
+                realMatchRepository.save(new RealMatch("LAR", "SEA", week16));
+                realMatchRepository.save(new RealMatch("GB", "CHI", week16));
+                realMatchRepository.save(new RealMatch("PHI", "WAS", week16));
+                realMatchRepository.save(new RealMatch("KC", "TEN", week16));
+                realMatchRepository.save(new RealMatch("NYJ", "NO", week16));
+                realMatchRepository.save(new RealMatch("NE", "BAL", week16));
+                realMatchRepository.save(new RealMatch("BUF", "CLE", week16));
+                realMatchRepository.save(new RealMatch("TB", "CAR", week16));
+                realMatchRepository.save(new RealMatch("MIN", "NYG", week16));
+                realMatchRepository.save(new RealMatch("LAC", "DAL", week16));
+                realMatchRepository.save(new RealMatch("ATL", "ARI", week16));
+                realMatchRepository.save(new RealMatch("JAX", "DEN", week16));
+                realMatchRepository.save(new RealMatch("PIT", "DET", week16));
+                realMatchRepository.save(new RealMatch("LV", "HOU", week16));
+                realMatchRepository.save(new RealMatch("CIN", "MIA", week16));
+                realMatchRepository.save(new RealMatch("SF", "IND", week16));
+            }
+
+            Gameweek week17 = gameweekRepository.findByGameweekId(17L);
+            if(week17.getId() != null){
+                realMatchRepository.save(new RealMatch("DAL", "WAS", week17)); // Christmas Netflix
+                realMatchRepository.save(new RealMatch("DET", "MIN", week17)); // Christmas Netflix
+                realMatchRepository.save(new RealMatch("DEN", "KC", week17)); // Christmas Prime
+                realMatchRepository.save(new RealMatch("NYG", "LV", week17));
+                realMatchRepository.save(new RealMatch("HOU", "LAC", week17));
+                realMatchRepository.save(new RealMatch("ARI", "CIN", week17));
+                realMatchRepository.save(new RealMatch("BAL", "GB", week17));
+                realMatchRepository.save(new RealMatch("SEA", "CAR", week17));
+                realMatchRepository.save(new RealMatch("NO", "TEN", week17));
+                realMatchRepository.save(new RealMatch("PIT", "CLE", week17));
+                realMatchRepository.save(new RealMatch("NE", "NYJ", week17));
+                realMatchRepository.save(new RealMatch("JAX", "IND", week17));
+                realMatchRepository.save(new RealMatch("TB", "MIA", week17));
+                realMatchRepository.save(new RealMatch("PHI", "BUF", week17));
+                realMatchRepository.save(new RealMatch("CHI", "SF", week17));
+                realMatchRepository.save(new RealMatch("LAR", "ATL", week17));
+            }
+
+            Gameweek week18 = gameweekRepository.findByGameweekId(18L);
+            if(week18.getId() != null){
+                realMatchRepository.save(new RealMatch("NYJ", "BUF", week18));
+                realMatchRepository.save(new RealMatch("KC", "LAC", week18));
+                realMatchRepository.save(new RealMatch("BAL", "PIT", week18));
+                realMatchRepository.save(new RealMatch("CLE", "CIN", week18));
+                realMatchRepository.save(new RealMatch("MIA", "NE", week18));
+                realMatchRepository.save(new RealMatch("TEN", "JAX", week18));
+                realMatchRepository.save(new RealMatch("LAC", "DEN", week18));
+                realMatchRepository.save(new RealMatch("IND", "HOU", week18));
+                realMatchRepository.save(new RealMatch("DET", "CHI", week18));
+                realMatchRepository.save(new RealMatch("GB", "MIN", week18));
+                realMatchRepository.save(new RealMatch("NO", "ATL", week18));
+                realMatchRepository.save(new RealMatch("SEA", "SF", week18));
+                realMatchRepository.save(new RealMatch("WAS", "PHI", week18));
+                realMatchRepository.save(new RealMatch("DAL", "NYG", week18));
+                realMatchRepository.save(new RealMatch("CAR", "TB", week18));
+                realMatchRepository.save(new RealMatch("ARI", "LAR", week18));
+            }
+        }
+        else
+        {
+            System.out.println("ℹ️ DataSeeder: Real matches already exist, skipping seeding.");
+        }
+    }
 }
 

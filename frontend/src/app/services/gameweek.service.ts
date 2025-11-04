@@ -20,6 +20,10 @@ export class GameweekService {
     return this.http.get<Gameweek>(`${this.apiUrl}/current`);
   }
 
+  getInProgressGameweek(): Observable<Gameweek> {
+    return this.http.get<Gameweek>(`${this.apiUrl}/current`);
+  }
+
   finishGameweek(gameweekId: number): Observable<Gameweek> {
     return this.http.put<Gameweek>(`${this.apiUrl}/${gameweekId}/finish`, {});
   }
