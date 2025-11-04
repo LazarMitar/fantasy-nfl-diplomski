@@ -82,12 +82,12 @@
             <div class="player-action">
               <button *ngIf="!isPlayerInRoster(player.id)" 
                       class="add-btn" 
-                      (click)="addPlayerToRoster(player.id)">
+                      (click)="addPlayerToRoster(player.id); $event.stopPropagation()">
                 +
               </button>
               <button *ngIf="isPlayerInRoster(player.id)" 
                       class="remove-btn" 
-                      (click)="removePlayerFromRoster(player.id)">
+                      (click)="removePlayerFromRoster(player.id); $event.stopPropagation()">
                 ✕
               </button>
             </div>
