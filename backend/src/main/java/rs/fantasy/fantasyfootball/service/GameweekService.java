@@ -38,7 +38,17 @@ public class GameweekService {
             if (gw.getStatus() == GameweekStatus.FINISHED || gw.getStatus() == GameweekStatus.IN_PROGRESS) continue;
 
             if (now.isBefore(gw.getEndTime()) && now.isAfter(gw.getStartTime())) {
+                // Postavi gameweek na IN_PROGRESS
                 gw.setStatus(GameweekStatus.IN_PROGRESS);
+                
+                // Postavi sve duelove za ovo kolo na IN_PROGRESS
+                List<Duel> duels = duelRepository.findByGameweek(gw);
+                for (Duel duel : duels) {
+                    if (duel.getStatus() == DuelStatus.PENDING) {
+                        duel.setStatus(DuelStatus.IN_PROGRESS);
+                        duelRepository.save(duel);
+                    }
+                }
             }
 
             gameweekRepository.saveAll(all);
