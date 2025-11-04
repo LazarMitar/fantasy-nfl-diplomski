@@ -1,0 +1,75 @@
+<div class="conversations-container">
+  <div class="conversations-card">
+    <div class="header">
+      <h1>Messages</h1>
+      <p>Your conversations</p>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="!loading && conversations.length === 0" class="no-conversations">
+      <p>You don't have any messages yet.</p>
+      <p class="hint">Click the button below to start a new conversation!</p>
+      <button class="btn-primary" (click)="startNewConversation()">Start New Conversation</button>
+    </div>
+
+    <div *ngIf="!loading && conversations.length > 0" class="conversations-list">
+      <div *ngFor="let conv of conversations" 
+           class="conversation-card"
+           (click)="openChat(conv.userId)"
+           [class.unread]="conv.unreadCount > 0">
+        <div class="conversation-info">
+          <div class="user-avatar">
+            {{ conv.name.charAt(0) }}{{ conv.lastname.charAt(0) }}
+          </div>
+          <div class="user-details">
+            <h3>{{ conv.name }} {{ conv.lastname }}</h3>
+            <p class="username">{{ '@' + conv.username }}</p>
+          </div>
+        </div>
+        <div class="conversation-meta">
+          <span *ngIf="conv.unreadCount > 0" class="unread-badge">
+            {{ conv.unreadCount }}
+          </span>
+          <span class="arrow">→</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" (click)="goBack()">Back</button>
+      <button class="btn-primary" (click)="startNewConversation()" *ngIf="!loading && conversations.length > 0">
+        New Conversation
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal za izbor korisnika -->
+  <div class="modal-overlay" *ngIf="showUserList" (click)="closeUserList()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Start New Conversation</h2>
+        <button class="close-btn" (click)="closeUserList()">×</button>
+      </div>
+      
+      <div *ngIf="loadingUsers" class="loading">Loading users...</div>
+      
+      <div *ngIf="!loadingUsers" class="users-list">
+        <div *ngFor="let user of allUsers" 
+             class="user-item"
+             (click)="startChatWithUser(user.id_kor)">
+          <div class="user-avatar">
+            {{ user.name.charAt(0) }}{{ user.lastname.charAt(0) }}
+          </div>
+          <div class="user-info">
+            <h3>{{ user.name }} {{ user.lastname }}</h3>
+            <p>{{ '@' + user.username }}</p>
+          </div>
+          <div class="arrow">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

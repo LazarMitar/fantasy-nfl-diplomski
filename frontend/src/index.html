@@ -6,6 +6,12 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // Polyfill za SockJS/STOMP - definišemo 'global' kao 'window'
+    window.global = window;
+    // Polyfill za 'process' koji Node.js biblioteke očekuju
+    window.process = { env: {} };
+  </script>
 </head>
 <body>
   <app-root></app-root>

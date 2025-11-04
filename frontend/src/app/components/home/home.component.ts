@@ -83,4 +83,8 @@ export class HomeComponent implements OnInit {
   goToManageRealMatches() {
     this.router.navigate(['/manage-real-matches']);
   }
+
+  goToMessages() {
+    this.router.navigate(['/messages']);
+  }
 }

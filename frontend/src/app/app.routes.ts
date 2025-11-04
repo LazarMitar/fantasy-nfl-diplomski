@@ -82,5 +82,15 @@ export const routes: Routes = [
     path: 'team-stats/:team',
     loadComponent: () => import('./components/team-stats/team-stats.component').then(m => m.TeamStatsComponent),
     canActivate: [adminGuard]
+  },
+  {
+    path: 'messages',
+    loadComponent: () => import('./components/conversations/conversations.component').then(m => m.ConversationsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'messages/chat/:userId',
+    loadComponent: () => import('./components/chat/chat.component').then(m => m.ChatComponent),
+    canActivate: [authGuard]
   }
 ];

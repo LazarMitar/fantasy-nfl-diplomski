@@ -40,10 +40,12 @@
       <button class="nav-btn stats-btn" (click)="goToEnterStats()">📊 Enter Stats</button>
       <button class="nav-btn matches-btn" (click)="goToManageRealMatches()">⚽ Real Matches</button>
       <button class="nav-btn predictions-btn" (click)="goToPredictions()">🔮 My Predictions</button>
+      <button class="nav-btn messages-btn" (click)="goToMessages()">💬 Messages</button>
     </div>
     <div *ngIf="!isAdmin" class="user-actions">
       <button class="nav-btn" (click)="goToAvailableLeagues()">Available Leagues</button>
       <button class="nav-btn predictions-btn" (click)="goToPredictions()">🔮 My Predictions</button>
+      <button class="nav-btn messages-btn" (click)="goToMessages()">💬 Messages</button>
     </div>
   </div>
 </div>

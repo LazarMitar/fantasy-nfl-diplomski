@@ -27,7 +27,7 @@ public class MatchPrediction {
     private RealMatch realMatch;
 
     @Column(name = "predicted_winner", nullable = false)
-    private String predictedWinner;  // "KC", "BUF", etc.
+    private String predictedWinner;  
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

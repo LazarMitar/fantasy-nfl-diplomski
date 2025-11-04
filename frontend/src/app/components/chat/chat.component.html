@@ -1,0 +1,47 @@
+<div class="chat-container">
+  <div class="chat-card">
+    <div class="chat-header">
+      <button class="btn-back" (click)="goBack()">← Back</button>
+      <h2 *ngIf="otherUserName">{{ otherUserName }}</h2>
+      <h2 *ngIf="!otherUserName && !loading">Chat</h2>
+      <div class="header-spacer"></div>
+    </div>
+
+    <div *ngIf="loading" class="loading">Loading messages...</div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div #messagesContainer class="messages-container" *ngIf="!loading">
+      <div *ngIf="messages.length === 0" class="no-messages">
+        <p>No messages yet. Start the conversation!</p>
+      </div>
+
+      <div *ngFor="let message of messages" 
+           class="message" 
+           [class.my-message]="isMyMessage(message)"
+           [class.other-message]="!isMyMessage(message)">
+        <div class="message-content">
+          <div class="message-text">{{ message.content }}</div>
+          <div class="message-time">{{ formatTime(message.sentAt) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="message-input-container" *ngIf="!loading">
+      <textarea 
+        [(ngModel)]="newMessage"
+        (keydown.enter)="$event.preventDefault(); sendMessage()"
+        placeholder="Type your message..."
+        class="message-input"
+        rows="2"
+        [disabled]="sending">
+      </textarea>
+      <button 
+        class="btn-send" 
+        (click)="sendMessage()"
+        [disabled]="!newMessage.trim() || sending">
+        {{ sending ? 'Sending...' : 'Send' }}
+      </button>
+    </div>
+  </div>
+</div>
+
